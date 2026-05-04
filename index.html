@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>ATLAS RP - Sistema Penal</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #0b0f14;
+    color: #e6edf3;
+}
+
+.container {
+    width: 90%;
+    margin: auto;
+}
+
+h1 {
+    color: #00d4ff;
+}
+
+.card {
+    background: #161b22;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 10px;
+}
+
+button {
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    border: none;
+    background: #00d4ff;
+    color: black;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #00aacc;
+}
+
+input, select {
+    padding: 8px;
+    margin: 5px;
+    width: 80%;
+}
+
+.lista-crimes {
+    text-align: left;
+}
+
+.crime-item {
+    background: #0d1117;
+    padding: 8px;
+    margin: 5px;
+    border-radius: 5px;
+}
+
+.resultado {
+    font-size: 18px;
+}
+
+textarea {
+    width: 100%;
+    height: 200px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>⚖️ ATLAS RP - SISTEMA PENAL</h1>
+
+<div class="card">
+<h2>👤 Dados</h2>
+<input id="suspeito" placeholder="Nome do Suspeito">
+<input id="oficial" placeholder="Nome do Oficial">
+</div>
+
+<div class="card">
+<h2>📜 Crimes</h2>
+
+<select id="crime">
+<option value="homicidio">Homicídio</option>
+<option value="lesao">Lesão Corporal</option>
+<option value="tentativa">Tentativa de Homicídio</option>
+<option value="furto">Furto</option>
+<option value="roubo">Roubo</option>
+<option value="extorsao">Extorsão</option>
+<option value="fuga">Fuga de Abordagem</option>
+<option value="racha">Racha Ilegal</option>
+<option value="peculato">Peculato</option>
+<option value="corrupcao_passiva">Corrupção Passiva</option>
+<option value="corrupcao_ativa">Corrupção Ativa</option>
+<option value="organizacao">Organização Criminosa</option>
+<option value="armas">Tráfico de Armas</option>
+<option value="drogas">Tráfico de Drogas</option>
+</select>
+
+<br>
+<button onclick="addCrime()">Adicionar</button>
+
+<div class="lista-crimes" id="lista"></div>
+</div>
+
+<div class="card">
+<h2>⚙️ Modificadores</h2>
+<label><input type="checkbox" id="reincidencia"> Reincidência (+50%)</label><br>
+<label><input type="checkbox" id="tentativaMod"> Tentativa (-50%)</label><br>
+<label><input type="checkbox" id="cooperacao"> Cooperação (-30%)</label>
+</div>
+
+<div class="card resultado">
+<h2>📊 Resultado</h2>
+<p>Tempo: <span id="tempo">0</span> min</p>
+<p>Multa: $<span id="multa">0</span></p>
+</div>
+
+<div class="card">
+<h2>📄 Relatório (BO)</h2>
+<button onclick="gerarRelatorio()">Gerar</button>
+<button onclick="copiar()">Copiar</button>
+<textarea id="relatorio"></textarea>
+</div>
+
+</div>
+
+<script>
+const crimesDB = {
+    homicidio: {nome:"Homicídio", min:30, max:60, multaMin:80000, multaMax:150000},
+    lesao: {nome:"Lesão Corporal", min:10, max:30, multaMin:20000, multaMax:50000},
+    tentativa: {nome:"Tentativa de Homicídio", min:15, max:40, multaMin:50000, multaMax:100000},
+    furto: {nome:"Furto", min:10, max:25, multaMin:15000, multaMax:40000},
+    roubo: {nome:"Roubo", min:20, max:50, multaMin:50000, multaMax:120000},
+    extorsao: {nome:"Extorsão", min:25, max:55, multaMin:70000, multaMax:150000},
+    fuga: {nome:"Fuga de Abordagem", min:15, max:35, multaMin:40000, multaMax:80000},
+    racha: {nome:"Racha Ilegal", min:10, max:30, multaMin:30000, multaMax:70000},
+    peculato: {nome:"Peculato", min:40, max:80, multaMin:100000, multaMax:250000},
+    corrupcao_passiva: {nome:"Corrupção Passiva", min:45, max:80, multaMin:120000, multaMax:300000},
+    corrupcao_ativa: {nome:"Corrupção Ativa", min:35, max:70, multaMin:100000, multaMax:250000},
+    organizacao: {nome:"Organização Criminosa", min:50, max:90, multaMin:150000, multaMax:400000},
+    armas: {nome:"Tráfico de Armas", min:60, max:100, multaMin:200000, multaMax:500000},
+    drogas: {nome:"Tráfico de Drogas", min:60, max:110, multaMin:250000, multaMax:600000}
+};
+
+let lista = [];
+
+function addCrime() {
+    const id = document.getElementById("crime").value;
+    lista.push(id);
+    render();
+}
+
+function remover(index) {
+    lista.splice(index,1);
+    render();
+}
+
+function render() {
+    const div = document.getElementById("lista");
+    div.innerHTML = "";
+
+    lista.forEach((c,i)=>{
+        div.innerHTML += `
+        <div class="crime-item">
+        ${crimesDB[c].nome}
+        <button onclick="remover(${i})">X</button>
+        </div>`;
+    });
+
+    calcular();
+}
+
+function calcular() {
+    let tempo=0, multa=0;
+
+    lista.forEach(c=>{
+        tempo += (crimesDB[c].min + crimesDB[c].max)/2;
+        multa += (crimesDB[c].multaMin + crimesDB[c].multaMax)/2;
+    });
+
+    if(document.getElementById("reincidencia").checked){
+        tempo *=1.5; multa*=1.5;
+    }
+
+    if(document.getElementById("tentativaMod").checked){
+        tempo *=0.5; multa*=0.5;
+    }
+
+    if(document.getElementById("cooperacao").checked){
+        tempo *=0.7; multa*=0.7;
+    }
+
+    document.getElementById("tempo").innerText=Math.round(tempo);
+    document.getElementById("multa").innerText=Math.round(multa);
+}
+
+function gerarRelatorio(){
+    const suspeito = document.getElementById("suspeito").value;
+    const oficial = document.getElementById("oficial").value;
+
+    let texto = `📄 RELATÓRIO POLICIAL - ATLAS RP\n\n`;
+    texto += `👤 Suspeito: ${suspeito}\n`;
+    texto += `👮 Oficial: ${oficial}\n`;
+    texto += `📅 Data: ${new Date().toLocaleString()}\n\n`;
+
+    texto += `📜 Crimes:\n`;
+    lista.forEach(c=>{
+        texto += `- ${crimesDB[c].nome}\n`;
+    });
+
+    texto += `\n⏱ Pena: ${document.getElementById("tempo").innerText} meses\n`;
+    texto += `💰 Multa: $${document.getElementById("multa").innerText}\n`;
+
+    document.getElementById("relatorio").value = texto;
+}
+
+function copiar(){
+    const area = document.getElementById("relatorio");
+    area.select();
+    document.execCommand("copy");
+    alert("Copiado!");
+}
+</script>
+
+</body>
+</html>
