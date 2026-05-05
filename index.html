@@ -12,57 +12,17 @@ body{
     color:#00d4ff;
 }
 
-/* TELAS */
-.tela{
-    display:none;
-    height:100vh;
-    justify-content:center;
-    align-items:center;
-}
-
-.ativa{
-    display:flex;
-}
-
-/* BOX */
-.box{
-    background:#0a0f18;
-    padding:30px;
-    border-radius:10px;
-    text-align:center;
-}
-
-input{
-    display:block;
-    margin:10px auto;
-    padding:10px;
-    width:220px;
-}
-
-button{
-    padding:10px;
-    margin-top:5px;
-    background:#00d4ff;
-    border:none;
-    cursor:pointer;
-}
-
-/* APP */
-#app{
-    display:none;
-}
-
 .terminal{
     background:#000;
     color:#00ff9c;
     padding:10px;
-    height:100px;
+    height:120px;
     overflow:auto;
 }
 
 .container{
     display:grid;
-    grid-template-columns:1fr 1fr;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
     gap:10px;
     padding:10px;
 }
@@ -72,35 +32,36 @@ button{
     padding:10px;
     border-radius:10px;
 }
+
+input,select{
+    width:100%;
+    padding:8px;
+    margin:5px 0;
+}
+
+button{
+    padding:8px;
+    background:#00d4ff;
+    border:none;
+    cursor:pointer;
+}
+
+.crime-item{
+    display:flex;
+    justify-content:space-between;
+    background:#000;
+    padding:6px;
+    margin-top:5px;
+}
+
+.crime-item button{
+    background:red;
+    color:white;
+}
 </style>
 </head>
 
 <body>
-
-<!-- REGISTRO -->
-<div id="registro" class="tela ativa">
-<div class="box">
-<h2>📝 Criar Conta</h2>
-<input id="newUser" placeholder="Usuário">
-<input id="newPass" type="password" placeholder="Senha">
-<button onclick="registrar()">Registrar</button>
-<p onclick="irLogin()" style="cursor:pointer;">Já tem conta? Fazer login</p>
-</div>
-</div>
-
-<!-- LOGIN -->
-<div id="login" class="tela">
-<div class="box">
-<h2>🔐 Login</h2>
-<input id="user" placeholder="Usuário">
-<input id="pass" type="password" placeholder="Senha">
-<button onclick="logar()">Entrar</button>
-<p onclick="irRegistro()" style="cursor:pointer;">Criar conta</p>
-</div>
-</div>
-
-<!-- APP -->
-<div id="app">
 
 <div class="terminal" id="terminal"></div>
 
@@ -114,14 +75,46 @@ button{
 
 <div class="card">
 <h3>📚 Código Penal</h3>
+
 <select id="crime">
+
+<!-- VIDA -->
 <option value="homicidio">Homicídio</option>
-<option value="roubo">Roubo</option>
+<option value="tentativa">Tentativa de Homicídio</option>
+<option value="lesao">Lesão Corporal</option>
+<option value="culposo">Homicídio Culposo</option>
+<option value="omissao">Omissão de Socorro</option>
+
+<!-- PATRIMONIO -->
 <option value="furto">Furto</option>
-<option value="drogas">Tráfico</option>
+<option value="roubo">Roubo</option>
+<option value="extorsao">Extorsão</option>
+<option value="sequestro">Sequestro</option>
+<option value="receptacao">Receptação</option>
+
+<!-- TRANSITO -->
+<option value="fuga">Fuga de Abordagem</option>
+<option value="racha">Racha Ilegal</option>
+<option value="dui">Direção Sob Influência</option>
+
+<!-- AUTORIDADE -->
+<option value="desacato">Desacato</option>
+<option value="resistencia">Resistência</option>
+
+<!-- ARMAS -->
+<option value="porte">Porte Ilegal de Arma</option>
+<option value="disparo">Disparo em Via Pública</option>
+
+<!-- DIGITAL (ALTERADO) -->
+<option value="fraude_banco">Fraude Bancária</option>
+<option value="invasao_banco">Invasão à Rede Bancária</option>
+
 </select>
+
 <button onclick="addCrime()">Adicionar</button>
+
 <div id="lista"></div>
+
 </div>
 
 <div class="card">
@@ -144,85 +137,51 @@ button{
 
 </div>
 
-</div>
-
 <audio id="som" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b8c6c.mp3"></audio>
 
 <script>
 
-/* TROCA DE TELA */
-function irLogin(){
-    registro.classList.remove("ativa");
-    login.classList.add("ativa");
-}
+const crimesDB = {
 
-function irRegistro(){
-    login.classList.remove("ativa");
-    registro.classList.add("ativa");
-}
+homicidio:{nome:"Art.121 Homicídio",tempo:45,multa:100000},
+tentativa:{nome:"Art.122 Tentativa",tempo:25,multa:70000},
+lesao:{nome:"Art.129 Lesão",tempo:20,multa:30000},
+culposo:{nome:"Art.123 Culposo",tempo:25,multa:60000},
+omissao:{nome:"Art.124 Omissão",tempo:15,multa:30000},
 
-/* REGISTRO */
-function registrar(){
-    const u = newUser.value;
-    const p = newPass.value;
+furto:{nome:"Art.155 Furto",tempo:20,multa:30000},
+roubo:{nome:"Art.157 Roubo",tempo:35,multa:80000},
+extorsao:{nome:"Art.158 Extorsão",tempo:40,multa:100000},
+sequestro:{nome:"Art.159 Sequestro",tempo:60,multa:150000},
+receptacao:{nome:"Art.161 Receptação",tempo:25,multa:60000},
 
-    if(!u || !p){
-        alert("Preencha tudo");
-        return;
-    }
+fuga:{nome:"Fuga de Abordagem",tempo:25,multa:60000},
+racha:{nome:"Racha Ilegal",tempo:20,multa:50000},
+dui:{nome:"Direção Sob Influência",tempo:20,multa:40000},
 
-    let users = JSON.parse(localStorage.getItem("users")) || [];
+desacato:{nome:"Art.164 Desacato",tempo:10,multa:20000},
+resistencia:{nome:"Art.165 Resistência",tempo:20,multa:50000},
 
-    if(users.find(x=>x.user===u)){
-        alert("Usuário já existe");
-        return;
-    }
+porte:{nome:"Art.167 Porte Ilegal",tempo:30,multa:80000},
+disparo:{nome:"Art.168 Disparo",tempo:40,multa:100000},
 
-    users.push({user:u, pass:p});
-    localStorage.setItem("users", JSON.stringify(users));
+/* DIGITAL ALTERADO */
+fraude_banco:{nome:"Art.169 Fraude Bancária",tempo:35,multa:90000},
+invasao_banco:{nome:"Art.170 Invasão à Rede Bancária",tempo:50,multa:120000}
 
-    alert("Conta criada!");
-    irLogin();
-}
-
-/* LOGIN */
-function logar(){
-    const u = user.value;
-    const p = pass.value;
-
-    let users = JSON.parse(localStorage.getItem("users")) || [];
-
-    const found = users.find(x=>x.user===u && x.pass===p);
-
-    if(found){
-        login.style.display="none";
-        registro.style.display="none";
-        app.style.display="block";
-        log("[ACESSO] Login autorizado: "+u);
-    }else{
-        alert("Login inválido");
-    }
-}
-
-/* SISTEMA PENAL */
-const crimesDB={
-homicidio:{nome:"Homicídio",tempo:40,multa:100000},
-roubo:{nome:"Roubo",tempo:30,multa:80000},
-furto:{nome:"Furto",tempo:20,multa:40000},
-drogas:{nome:"Tráfico",tempo:60,multa:200000}
 };
 
-let lista=[];
+let lista = [];
 
 /* TERMINAL */
 function log(msg){
-    terminal.innerHTML+=msg+"<br>";
-    terminal.scrollTop=terminal.scrollHeight;
+    terminal.innerHTML += msg+"<br>";
+    terminal.scrollTop = terminal.scrollHeight;
 }
 
 /* CRIMES */
 function addCrime(){
-    const id=crime.value;
+    const id = crime.value;
     lista.push(id);
 
     som.play().catch(()=>{});
@@ -232,10 +191,10 @@ function addCrime(){
 }
 
 function render(){
-    listaDiv.innerHTML="";
+    listaDiv.innerHTML = "";
     lista.forEach((c,i)=>{
-        listaDiv.innerHTML+=`
-        <div>
+        listaDiv.innerHTML += `
+        <div class="crime-item">
         ${crimesDB[c].nome}
         <button onclick="remover(${i})">X</button>
         </div>`;
@@ -245,6 +204,7 @@ function render(){
 
 function remover(i){
     lista.splice(i,1);
+    log("[REMOVIDO]");
     render();
 }
 
@@ -270,6 +230,7 @@ cooperacao.onchange=calcular;
 /* RELATORIO */
 function gerar(){
     calcular();
+
     relatorio.value=
 `RELATÓRIO ATLAS
 
@@ -279,7 +240,7 @@ Oficial: ${oficial.value}
 Crimes:
 ${lista.map(c=>"- "+crimesDB[c].nome).join("\n")}
 
-Pena: ${tempo.innerText}
+Pena: ${tempo.innerText} meses
 Multa: $${multa.innerText}`;
 }
 
