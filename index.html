@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>ATLAS MDT POLICIAL</title>
+<title>ATLAS MDT PRO MAX</title>
 
 <style>
 body{
@@ -103,7 +103,7 @@ border-radius:6px;
 <!-- LOGIN -->
 <div id="loginBox">
 <div class="login-card">
-<h3>🔐 ATLAS MDT POLICIAL</h3>
+<h3>🔐 ATLAS MDT PRO MAX</h3>
 
 <input id="user" placeholder="Usuário">
 <input id="pass" type="password" placeholder="Senha">
@@ -116,7 +116,7 @@ border-radius:6px;
 <div id="app">
 
 <div class="topbar">
-<span>MDT PRO MAX</span>
+<span>MDT POLICIAL - ATLAS RP</span>
 <button onclick="logout()">Sair</button>
 </div>
 
@@ -137,35 +137,57 @@ border-radius:6px;
 <input id="suspeitoNome" placeholder="Nome do Suspeito">
 <input id="suspeitoId" placeholder="ID do Suspeito">
 
-<textarea id="bo" rows="5" placeholder="Descrição"></textarea>
+<textarea id="bo" rows="5" placeholder="Descrição do Ocorrido"></textarea>
 
 <select id="crime">
+
+<optgroup label="🚨 Vida">
 <option value="homicidio_culposo">Art.123 Homicídio Culposo</option>
 <option value="omissao">Art.124 Omissão de Socorro</option>
+<option value="homicidio_qualificado">Art.180 Homicídio Qualificado</option>
+</optgroup>
+
+<optgroup label="💰 Patrimônio">
 <option value="sequestro">Art.159 Sequestro</option>
-<option value="dano">Art.160 Dano ao Patrimônio</option>
+<option value="dano">Art.160 Dano</option>
 <option value="receptacao">Art.161 Receptação</option>
-<option value="dui">Art.162 DUI</option>
-<option value="atropelamento">Art.163 Atropelamento</option>
-<option value="desacato">Art.164 Desacato</option>
-<option value="resistencia">Art.165 Resistência à Prisão</option>
-<option value="obstrucao">Art.166 Obstrução de Justiça</option>
-<option value="porte">Art.167 Porte Ilegal de Arma</option>
-<option value="disparo">Art.168 Disparo em Via Pública</option>
-<option value="fraude">Art.169 Fraude Bancária</option>
-<option value="invasao">Art.170 Invasão de Sistema</option>
-<option value="identidade">Art.171 Falsa Identidade</option>
-<option value="calunia">Art.172 Denunciação Caluniosa</option>
-<option value="corrupcao">Art.173 Corrupção Ativa</option>
-<option value="lavagem">Art.174 Lavagem de Dinheiro</option>
-<option value="organizacao">Art.175 Organização Criminosa</option>
-<option value="trafico_armas">Art.176 Tráfico de Armas</option>
-<option value="evasao">Art.177 Evasão de Prisão</option>
 <option value="assalto_banco">Art.178 Assalto a Banco</option>
 <option value="sequestro_relampago">Art.179 Sequestro Relâmpago</option>
-<option value="homicidio_qualificado">Art.180 Homicídio Qualificado</option>
+</optgroup>
+
+<optgroup label="🚗 Trânsito">
+<option value="dui">Art.162 DUI</option>
+<option value="atropelamento">Art.163 Atropelamento</option>
+</optgroup>
+
+<optgroup label="🚔 Autoridade">
+<option value="desacato">Art.164 Desacato</option>
+<option value="resistencia">Art.165 Resistência</option>
+<option value="obstrucao">Art.166 Obstrução</option>
+</optgroup>
+
+<optgroup label="🔫 Armas">
+<option value="porte">Art.167 Porte Ilegal</option>
+<option value="disparo">Art.168 Disparo</option>
+<option value="trafico_armas">Art.176 Tráfico de Armas</option>
+</optgroup>
+
+<optgroup label="💻 Digitais">
+<option value="fraude">Art.169 Fraude Bancária</option>
+<option value="invasao">Art.170 Invasão Sistema</option>
 <option value="cyberstalking">Art.181 Cyberstalking</option>
-<option value="extorsao_qualificada">Art.182 Extorsão Qualificada</option>
+</optgroup>
+
+<optgroup label="🧠 Gerais">
+<option value="identidade">Art.171 Falsa Identidade</option>
+<option value="calunia">Art.172 Calúnia</option>
+<option value="corrupcao">Art.173 Corrupção</option>
+<option value="lavagem">Art.174 Lavagem de Dinheiro</option>
+<option value="organizacao">Art.175 Organização Criminosa</option>
+<option value="evasao">Art.177 Evasão</option>
+<option value="extorsao_qualificada">Art.182 Extorsão</option>
+</optgroup>
+
 </select>
 
 <button onclick="addCrime()">Adicionar Crime</button>
@@ -182,6 +204,7 @@ border-radius:6px;
 
 <div class="card">
 <h3>🪪 FICHA CRIMINAL</h3>
+
 <input id="buscarId" placeholder="ID do suspeito">
 <button onclick="buscarFicha()">Buscar</button>
 
@@ -199,7 +222,7 @@ const webhookURL = "https://discordapp.com/api/webhooks/1501244387185790986/6DLO
 let crimes = [];
 let db = JSON.parse(localStorage.getItem("db") || "{}");
 
-/* LOGIN SIMPLES */
+/* LOGIN */
 function login(){
 localStorage.setItem("logado", user.value);
 start();
@@ -229,11 +252,10 @@ document.querySelectorAll(".tabs button")[i].classList.add("active");
 /* CRIMES */
 function addCrime(){
 crimes.push(crime.value);
-
 lista.innerHTML += `<div class="crime">${crime.value}</div>`;
 }
 
-/* FINALIZAR BO + FICHA */
+/* FINALIZAR BO */
 function finalizarBO(){
 
 let id = document.getElementById("suspeitoId").value;
@@ -244,7 +266,7 @@ db[id] = {nome:nome, ocorrencias:[]};
 }
 
 db[id].ocorrencias.push({
-crime: crimes,
+crimes: crimes,
 bo: document.getElementById("bo").value,
 oficial: document.getElementById("oficialNome").value,
 oficialId: document.getElementById("oficialId").value
@@ -263,16 +285,16 @@ fetch(webhookURL,{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
-username:"ATLAS MDT POLICIAL",
+username:"MDT PRO MAX",
 embeds:[{
-title:"📄 NOVO BO REGISTRADO",
+title:"📄 BO REGISTRADO",
 description:"```"+texto+"```",
 color:3447003
 }]
 })
 });
 
-alert("BO finalizado e salvo na ficha!");
+alert("BO salvo!");
 crimes=[];
 lista.innerHTML="";
 }
@@ -281,7 +303,6 @@ lista.innerHTML="";
 function buscarFicha(){
 
 let id = buscarId.value;
-
 let data = db[id];
 
 if(!data){
