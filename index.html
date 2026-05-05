@@ -2,262 +2,240 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>ATLAS RP - Sistema Penal</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<title>ATLAS MDT</title>
 
 <style>
-*{
+body{
     margin:0;
-    padding:0;
-    box-sizing:border-box;
+    font-family:Arial;
+    background:#020611;
+    color:#00d4ff;
 }
 
-body {
-    font-family: 'Inter', sans-serif;
-    background: radial-gradient(circle at top, #0a0f1c, #02040a);
-    color: #e6edf3;
+/* TELAS */
+.tela{
+    display:none;
+    height:100vh;
+    justify-content:center;
+    align-items:center;
 }
 
-/* HEADER */
-header {
-    text-align: center;
-    padding: 25px;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    background: rgba(0,0,0,0.3);
-    backdrop-filter: blur(10px);
+.ativa{
+    display:flex;
 }
 
-header img {
-    width: 90px;
-    margin-bottom: 10px;
+/* BOX */
+.box{
+    background:#0a0f18;
+    padding:30px;
+    border-radius:10px;
+    text-align:center;
 }
 
-header h1 {
-    font-family: 'Orbitron', sans-serif;
-    color: #00d4ff;
-    letter-spacing: 3px;
-    text-shadow: 0 0 15px #00d4ff;
-}
-
-/* CONTAINER */
-.container {
-    width: 92%;
-    max-width: 1200px;
-    margin: 20px auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
-    gap: 15px;
-}
-
-/* CARDS */
-.card {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(0,212,255,0.1);
-    padding: 18px;
-    border-radius: 15px;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 0 25px rgba(0,212,255,0.05);
-    transition: 0.3s;
-}
-
-.card:hover{
-    transform: translateY(-3px);
-    box-shadow: 0 0 25px rgba(0,212,255,0.15);
-}
-
-h2 {
-    color: #00d4ff;
-    margin-bottom: 10px;
-}
-
-/* INPUTS */
-input, select {
-    padding: 12px;
-    margin: 6px 0;
-    width: 100%;
-    border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.05);
-    background: rgba(0,0,0,0.4);
-    color: white;
-    outline: none;
-}
-
-input:focus, select:focus{
-    border: 1px solid #00d4ff;
-    box-shadow: 0 0 10px #00d4ff;
-}
-
-/* BUTTON */
-button {
-    padding: 10px 14px;
-    margin-top: 8px;
-    border-radius: 8px;
-    border: none;
-    background: linear-gradient(135deg,#00d4ff,#0066ff);
-    color: white;
-    cursor: pointer;
-    font-weight: 600;
-    transition: 0.2s;
-}
-
-button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px #00d4ff;
-}
-
-/* CRIMES */
-.lista-crimes {
-    margin-top: 10px;
-}
-
-.crime-item {
-    background: rgba(0,0,0,0.5);
-    padding: 10px;
-    margin-top: 6px;
-    border-radius: 8px;
-    display: flex;
-    justify-content: space-between;
-    border-left: 3px solid #00d4ff;
-}
-
-/* RESULTADO */
-.resultado p{
-    font-size: 18px;
-    margin: 5px 0;
-}
-
-.resultado span{
-    color:#00ffae;
-    font-weight: bold;
-    text-shadow:0 0 10px #00ffae;
-}
-
-/* TEXTAREA */
-textarea {
-    width: 100%;
-    height: 200px;
-    margin-top:10px;
-    border-radius: 8px;
-    background: rgba(0,0,0,0.6);
-    color: white;
-    padding: 10px;
-    border: 1px solid rgba(255,255,255,0.05);
-}
-
-/* CHECKBOX */
-label{
+input{
     display:block;
-    margin-top:6px;
+    margin:10px auto;
+    padding:10px;
+    width:220px;
+}
+
+button{
+    padding:10px;
+    margin-top:5px;
+    background:#00d4ff;
+    border:none;
     cursor:pointer;
 }
 
-input[type="checkbox"]{
-    margin-right:6px;
+/* APP */
+#app{
+    display:none;
+}
+
+.terminal{
+    background:#000;
+    color:#00ff9c;
+    padding:10px;
+    height:100px;
+    overflow:auto;
+}
+
+.container{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    padding:10px;
+}
+
+.card{
+    background:#0a0f18;
+    padding:10px;
+    border-radius:10px;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-    <img src="logo.png">
-    <h1>ATLAS RP • SISTEMA PENAL</h1>
-</header>
+<!-- REGISTRO -->
+<div id="registro" class="tela ativa">
+<div class="box">
+<h2>📝 Criar Conta</h2>
+<input id="newUser" placeholder="Usuário">
+<input id="newPass" type="password" placeholder="Senha">
+<button onclick="registrar()">Registrar</button>
+<p onclick="irLogin()" style="cursor:pointer;">Já tem conta? Fazer login</p>
+</div>
+</div>
+
+<!-- LOGIN -->
+<div id="login" class="tela">
+<div class="box">
+<h2>🔐 Login</h2>
+<input id="user" placeholder="Usuário">
+<input id="pass" type="password" placeholder="Senha">
+<button onclick="logar()">Entrar</button>
+<p onclick="irRegistro()" style="cursor:pointer;">Criar conta</p>
+</div>
+</div>
+
+<!-- APP -->
+<div id="app">
+
+<div class="terminal" id="terminal"></div>
 
 <div class="container">
 
 <div class="card">
-<h2>👤 Dados</h2>
-<input id="suspeito" placeholder="Nome do Suspeito">
-<input id="oficial" placeholder="Nome do Oficial">
+<h3>👤 Dados</h3>
+<input id="suspeito" placeholder="Suspeito">
+<input id="oficial" placeholder="Oficial">
 </div>
 
 <div class="card">
-<h2>📜 Crimes</h2>
-
+<h3>📚 Código Penal</h3>
 <select id="crime">
 <option value="homicidio">Homicídio</option>
-<option value="lesao">Lesão Corporal</option>
-<option value="tentativa">Tentativa de Homicídio</option>
-<option value="furto">Furto</option>
 <option value="roubo">Roubo</option>
-<option value="extorsao">Extorsão</option>
-<option value="fuga">Fuga de Abordagem</option>
-<option value="racha">Racha Ilegal</option>
-<option value="peculato">Peculato</option>
-<option value="corrupcao_passiva">Corrupção Passiva</option>
-<option value="corrupcao_ativa">Corrupção Ativa</option>
-<option value="organizacao">Organização Criminosa</option>
-<option value="armas">Tráfico de Armas</option>
-<option value="drogas">Tráfico de Drogas</option>
+<option value="furto">Furto</option>
+<option value="drogas">Tráfico</option>
 </select>
-
-<button onclick="addCrime()">Adicionar Crime</button>
-
-<div class="lista-crimes" id="lista"></div>
+<button onclick="addCrime()">Adicionar</button>
+<div id="lista"></div>
 </div>
 
 <div class="card">
-<h2>⚙️ Modificadores</h2>
-<label><input type="checkbox" id="reincidencia" onchange="calcular()"> Reincidência (+50%)</label>
-<label><input type="checkbox" id="tentativaMod" onchange="calcular()"> Tentativa (-50%)</label>
-<label><input type="checkbox" id="cooperacao" onchange="calcular()"> Cooperação (-30%)</label>
+<h3>⚙️ Modificadores</h3>
+<label><input type="checkbox" id="reincidencia"> Reincidência</label><br>
+<label><input type="checkbox" id="cooperacao"> Cooperação</label>
 </div>
 
-<div class="card resultado">
-<h2>📊 Resultado</h2>
-<p>Tempo: <span id="tempo">0</span> meses</p>
+<div class="card">
+<h3>📊 Resultado</h3>
+<p>Tempo: <span id="tempo">0</span></p>
 <p>Multa: $<span id="multa">0</span></p>
 </div>
 
 <div class="card">
-<h2>📄 Relatório (BO)</h2>
-<button onclick="gerarRelatorio()">Gerar</button>
-<button onclick="copiar()">Copiar</button>
+<h3>📄 Relatório</h3>
+<button onclick="gerar()">Gerar</button>
 <textarea id="relatorio"></textarea>
 </div>
 
 </div>
 
+</div>
+
+<audio id="som" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b8c6c.mp3"></audio>
+
 <script>
-// SEU JS ORIGINAL (mantido)
-const crimesDB = {
-    homicidio:{nome:"Homicídio",min:30,max:60,multaMin:80000,multaMax:150000},
-    lesao:{nome:"Lesão Corporal",min:10,max:30,multaMin:20000,multaMax:50000},
-    tentativa:{nome:"Tentativa de Homicídio",min:15,max:40,multaMin:50000,multaMax:100000},
-    furto:{nome:"Furto",min:10,max:25,multaMin:15000,multaMax:40000},
-    roubo:{nome:"Roubo",min:20,max:50,multaMin:50000,multaMax:120000},
-    extorsao:{nome:"Extorsão",min:25,max:55,multaMin:70000,multaMax:150000},
-    fuga:{nome:"Fuga de Abordagem",min:15,max:35,multaMin:40000,multaMax:80000},
-    racha:{nome:"Racha Ilegal",min:10,max:30,multaMin:30000,multaMax:70000},
-    peculato:{nome:"Peculato",min:40,max:80,multaMin:100000,multaMax:250000},
-    corrupcao_passiva:{nome:"Corrupção Passiva",min:45,max:80,multaMin:120000,multaMax:300000},
-    corrupcao_ativa:{nome:"Corrupção Ativa",min:35,max:70,multaMin:100000,multaMax:250000},
-    organizacao:{nome:"Organização Criminosa",min:50,max:90,multaMin:150000,multaMax:400000},
-    armas:{nome:"Tráfico de Armas",min:60,max:100,multaMin:200000,multaMax:500000},
-    drogas:{nome:"Tráfico de Drogas",min:60,max:110,multaMin:250000,multaMax:600000}
+
+/* TROCA DE TELA */
+function irLogin(){
+    registro.classList.remove("ativa");
+    login.classList.add("ativa");
+}
+
+function irRegistro(){
+    login.classList.remove("ativa");
+    registro.classList.add("ativa");
+}
+
+/* REGISTRO */
+function registrar(){
+    const u = newUser.value;
+    const p = newPass.value;
+
+    if(!u || !p){
+        alert("Preencha tudo");
+        return;
+    }
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    if(users.find(x=>x.user===u)){
+        alert("Usuário já existe");
+        return;
+    }
+
+    users.push({user:u, pass:p});
+    localStorage.setItem("users", JSON.stringify(users));
+
+    alert("Conta criada!");
+    irLogin();
+}
+
+/* LOGIN */
+function logar(){
+    const u = user.value;
+    const p = pass.value;
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    const found = users.find(x=>x.user===u && x.pass===p);
+
+    if(found){
+        login.style.display="none";
+        registro.style.display="none";
+        app.style.display="block";
+        log("[ACESSO] Login autorizado: "+u);
+    }else{
+        alert("Login inválido");
+    }
+}
+
+/* SISTEMA PENAL */
+const crimesDB={
+homicidio:{nome:"Homicídio",tempo:40,multa:100000},
+roubo:{nome:"Roubo",tempo:30,multa:80000},
+furto:{nome:"Furto",tempo:20,multa:40000},
+drogas:{nome:"Tráfico",tempo:60,multa:200000}
 };
 
 let lista=[];
 
-function addCrime(){
-    const id=document.getElementById("crime").value;
-    lista.push(id);
-    render();
+/* TERMINAL */
+function log(msg){
+    terminal.innerHTML+=msg+"<br>";
+    terminal.scrollTop=terminal.scrollHeight;
 }
 
-function remover(i){
-    lista.splice(i,1);
+/* CRIMES */
+function addCrime(){
+    const id=crime.value;
+    lista.push(id);
+
+    som.play().catch(()=>{});
+
+    log("[ADD] "+crimesDB[id].nome);
     render();
 }
 
 function render(){
-    const div=document.getElementById("lista");
-    div.innerHTML="";
+    listaDiv.innerHTML="";
     lista.forEach((c,i)=>{
-        div.innerHTML+=`
-        <div class="crime-item">
+        listaDiv.innerHTML+=`
+        <div>
         ${crimesDB[c].nome}
         <button onclick="remover(${i})">X</button>
         </div>`;
@@ -265,38 +243,46 @@ function render(){
     calcular();
 }
 
+function remover(i){
+    lista.splice(i,1);
+    render();
+}
+
+/* CALCULO */
 function calcular(){
-    let tempo=0,multa=0;
+    let t=0,m=0;
+
     lista.forEach(c=>{
-        tempo+=(crimesDB[c].min+crimesDB[c].max)/2;
-        multa+=(crimesDB[c].multaMin+crimesDB[c].multaMax)/2;
+        t+=crimesDB[c].tempo;
+        m+=crimesDB[c].multa;
     });
 
-    if(reincidencia.checked){tempo*=1.5;multa*=1.5;}
-    if(tentativaMod.checked){tempo*=0.5;multa*=0.5;}
-    if(cooperacao.checked){tempo*=0.7;multa*=0.7;}
+    if(reincidencia.checked){t*=1.5;m*=1.5;}
+    if(cooperacao.checked){t*=0.7;m*=0.7;}
 
-    tempo.innerText=Math.round(tempo);
-    multa.innerText=Math.round(multa);
+    tempo.innerText=Math.round(t);
+    multa.innerText=Math.round(m);
 }
 
-function gerarRelatorio(){
+reincidencia.onchange=calcular;
+cooperacao.onchange=calcular;
+
+/* RELATORIO */
+function gerar(){
     calcular();
-    let texto=`📄 RELATÓRIO POLICIAL - ATLAS RP\n\n`;
-    texto+=`👤 Suspeito: ${suspeito.value}\n`;
-    texto+=`👮 Oficial: ${oficial.value}\n`;
-    texto+=`📅 Data: ${new Date().toLocaleString()}\n\n`;
-    texto+=`📜 Crimes:\n`;
-    lista.forEach(c=>{texto+=`- ${crimesDB[c].nome}\n`;});
-    texto+=`\n⏱ Pena: ${tempo.innerText} meses\n`;
-    texto+=`💰 Multa: $${multa.innerText}`;
-    relatorio.value=texto;
+    relatorio.value=
+`RELATÓRIO ATLAS
+
+Suspeito: ${suspeito.value}
+Oficial: ${oficial.value}
+
+Crimes:
+${lista.map(c=>"- "+crimesDB[c].nome).join("\n")}
+
+Pena: ${tempo.innerText}
+Multa: $${multa.innerText}`;
 }
 
-function copiar(){
-    relatorio.select();
-    document.execCommand("copy");
-}
 </script>
 
 </body>
