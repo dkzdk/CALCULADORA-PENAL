@@ -2,115 +2,121 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>ATLAS MDT - LOGIN</title>
+<title>ATLAS MDT PRO</title>
 
 <style>
 body{
-    margin:0;
-    font-family:Arial;
-    background:#020611;
-    color:#00d4ff;
+margin:0;
+font-family:Arial;
+background:#020611;
+color:#00d4ff;
 }
 
 /* LOGIN */
-#loginBox{
-    position:fixed;
-    inset:0;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:#000;
+#login{
+position:fixed;
+inset:0;
+display:flex;
+justify-content:center;
+align-items:center;
+background:#000;
 }
 
 .login-card{
-    background:#0a0f18;
-    padding:20px;
-    border-radius:10px;
-    width:300px;
+background:#0a0f18;
+padding:20px;
+border-radius:10px;
+width:320px;
 }
 
-input, select, textarea{
-    width:100%;
-    padding:10px;
-    margin:5px 0;
-    background:#050a14;
-    border:1px solid #1a2a3a;
-    color:white;
-    border-radius:6px;
-}
-
-/* MAIN */
-#app{
-    display:none;
-}
-
-/* TOP BAR */
-.topbar{
-    background:#000;
-    padding:10px;
-    display:flex;
-    justify-content:space-between;
-}
-
-/* ABAS */
-.tabs{
-    display:flex;
-    background:#0a0f18;
-}
-
-.tabs button{
-    flex:1;
-    padding:10px;
-    background:#050a14;
-    color:#00d4ff;
-    border:none;
-    cursor:pointer;
-}
-
-.tabs button.active{
-    background:#00d4ff;
-    color:#000;
-}
-
-/* CONTEUDO */
-.tab{
-    display:none;
-    padding:10px;
-}
-
-.tab.active{
-    display:block;
-}
-
-.card{
-    background:#0a0f18;
-    padding:10px;
-    border-radius:10px;
-    margin-bottom:10px;
+input,select,textarea{
+width:100%;
+padding:10px;
+margin:5px 0;
+background:#050a14;
+border:1px solid #1a2a3a;
+color:#fff;
+border-radius:6px;
 }
 
 button{
-    padding:8px;
-    background:#00d4ff;
-    border:none;
-    cursor:pointer;
-    border-radius:6px;
-    font-weight:bold;
+padding:8px;
+background:#00d4ff;
+border:none;
+cursor:pointer;
+border-radius:6px;
+font-weight:bold;
 }
+
+/* APP */
+#app{display:none;}
+
+.topbar{
+background:#000;
+padding:10px;
+display:flex;
+justify-content:space-between;
+}
+
+.tabs{
+display:flex;
+background:#0a0f18;
+}
+
+.tabs button{
+flex:1;
+padding:10px;
+border:none;
+background:#050a14;
+color:#00d4ff;
+cursor:pointer;
+}
+
+.tabs button.active{
+background:#00d4ff;
+color:#000;
+}
+
+.tab{
+display:none;
+padding:10px;
+}
+
+.tab.active{display:block;}
+
+.card{
+background:#0a0f18;
+padding:10px;
+border-radius:10px;
+margin-bottom:10px;
+}
+
+.crime{
+display:flex;
+justify-content:space-between;
+padding:5px;
+background:#000;
+margin-top:5px;
+border-radius:6px;
+}
+
 </style>
 </head>
-
 <body>
 
 <!-- LOGIN -->
-<div id="loginBox">
+<div id="login">
 <div class="login-card">
-<h3>🔐 MDT LOGIN</h3>
+<h3>🔐 ATLAS MDT PRO</h3>
 <input id="user" placeholder="Usuário">
 <input id="pass" type="password" placeholder="Senha">
-
-<button onclick="login()">Entrar</button>
+<select id="role">
+<option value="pm">Policial</option>
+<option value="staff">Staff</option>
+<option value="admin">Admin</option>
+</select>
 <button onclick="register()">Cadastrar</button>
+<button onclick="login()">Entrar</button>
 </div>
 </div>
 
@@ -118,53 +124,61 @@ button{
 <div id="app">
 
 <div class="topbar">
-<span>ATLAS MDT SYSTEM</span>
+<span>ATLAS MDT PRO</span>
 <button onclick="logout()">Sair</button>
 </div>
 
 <div class="tabs">
-<button class="active" onclick="openTab(0)">Código Penal</button>
-<button onclick="openTab(1)">Consulta</button>
-<button onclick="openTab(2)">BO</button>
+<button class="active" onclick="tab(0)">Código Penal</button>
+<button onclick="tab(1)">Consulta</button>
+<button onclick="tab(2)">BO</button>
+<button onclick="tab(3)">Admin</button>
 </div>
 
-<!-- ABA 1 -->
+<!-- CP -->
 <div class="tab active">
 <div class="card">
 <h3>📚 Código Penal</h3>
-
 <select id="crime">
 <option value="homicidio">Homicídio</option>
 <option value="roubo">Roubo</option>
 <option value="fraude">Fraude Bancária</option>
-<option value="invasao">Invasão à Rede Bancária</option>
+<option value="invasao">Invasão Bancária</option>
 </select>
-
 <button onclick="addCrime()">Adicionar</button>
-<div id="lista"></div>
+<div id="list"></div>
 </div>
 
 <div class="card">
-<p>Tempo: <span id="tempo">0</span> meses</p>
-<p>Multa: $<span id="multa">0</span></p>
+Tempo: <span id="tempo">0</span> meses<br>
+Multa: $<span id="multa">0</span>
 </div>
 </div>
 
-<!-- ABA 2 -->
+<!-- CONSULTA -->
 <div class="tab">
 <div class="card">
 <h3>🔎 Consulta</h3>
-<input placeholder="Placa / CPF / Nome">
+<input placeholder="Nome / CPF / Placa">
 <button>Buscar</button>
 </div>
 </div>
 
-<!-- ABA 3 -->
+<!-- BO -->
 <div class="tab">
 <div class="card">
 <h3>📄 BO</h3>
 <textarea id="bo" rows="10"></textarea>
-<button onclick="saveBO()">Salvar BO</button>
+<button onclick="saveBO()">Salvar</button>
+</div>
+</div>
+
+<!-- ADMIN -->
+<div class="tab">
+<div class="card">
+<h3>⚙️ Admin Panel</h3>
+<button onclick="clearAll()">Limpar Dados</button>
+<button onclick="sendWebhook()">Enviar para Discord</button>
 </div>
 </div>
 
@@ -172,86 +186,94 @@ button{
 
 <script>
 
-/* LOGIN SIMPLE */
-function login(){
-let u = user.value;
-let p = pass.value;
+let crimesDB={
+homicidio:{t:50,m:100000},
+roubo:{t:35,m:80000},
+fraude:{t:40,m:90000},
+invasao:{t:60,m:120000}
+};
 
-if(localStorage.getItem(u) === p){
-localStorage.setItem("logado",u);
-start();
-}else{
-alert("Login inválido");
-}
-}
+let crimes=[];
 
+/* AUTH */
 function register(){
-localStorage.setItem(user.value, pass.value);
+localStorage.setItem(user.value, JSON.stringify({
+pass:pass.value,
+role:role.value
+}));
 alert("Conta criada");
 }
 
-function logout(){
-localStorage.removeItem("logado");
-location.reload();
-}
+function login(){
+let data=localStorage.getItem(user.value);
+if(!data)return alert("Usuário não existe");
 
-function start(){
-loginBox.style.display="none";
-app.style.display="block";
-}
+data=JSON.parse(data);
+if(data.pass!==pass.value)return alert("Senha errada");
 
-/* AUTO LOGIN */
-if(localStorage.getItem("logado")){
+localStorage.setItem("logado",user.value);
 start();
 }
 
-/* ABAS */
-function openTab(i){
-document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));
+function start(){
+login.style.display="none";
+app.style.display="block";
+}
+
+if(localStorage.getItem("logado"))start();
+
+function logout(){localStorage.clear();location.reload();}
+
+/* TABS */
+function tab(i){
+[...document.querySelectorAll(".tab")].forEach(t=>t.classList.remove("active"));
+[...document.querySelectorAll(".tabs button")].forEach(b=>b.classList.remove("active"));
 
 document.querySelectorAll(".tab")[i].classList.add("active");
 document.querySelectorAll(".tabs button")[i].classList.add("active");
 }
 
 /* CRIMES */
-const db = {
-homicidio:{t:45,m:100000},
-roubo:{t:30,m:80000},
-fraude:{t:35,m:90000},
-invasao:{t:50,m:120000}
-};
-
-let lista=[];
-
 function addCrime(){
-let c = crime.value;
-lista.push(c);
+let c=crime.value;
+crimes.push(c);
 render();
 }
 
 function render(){
-listaDiv.innerHTML="";
+list.innerHTML="";
 let t=0,m=0;
 
-lista.forEach(c=>{
-t+=db[c].t;
-m+=db[c].m;
-
-listaDiv.innerHTML+=`<div>${c}</div>`;
+crimes.forEach((c,i)=>{
+t+=crimesDB[c].t;
+m+=crimesDB[c].m;
+list.innerHTML+=`<div class='crime'>${c}<button onclick='remove(${i})'>X</button></div>`;
 });
 
 tempo.innerText=t;
 multa.innerText=m;
 }
 
+function remove(i){crimes.splice(i,1);render();}
+
 /* BO */
 function saveBO(){
-localStorage.setItem("bo", bo.value);
-alert("BO salvo");
+localStorage.setItem("bo",bo.value);
+alert("Salvo");
 }
+bo.value=localStorage.getItem("bo")||"";
 
-bo.value = localStorage.getItem("bo") || "";
+/* ADMIN */
+function clearAll(){localStorage.clear();alert("Resetado");}
+
+function sendWebhook(){
+fetch("https://discordapp.com/api/webhooks/1501244387185790986/6DLO24Eu_c-MZVNBJ7ZmcVX2RCw4SQA-3udA5UjV5gTp28jCH6YBO_SupKqVOKmqc9V0",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({content:"Novo BO gerado no MDT ATLAS"})
+});
+alert("Enviado");
+}
 
 </script>
 
