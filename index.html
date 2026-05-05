@@ -109,13 +109,16 @@ border-radius:6px;
 <div id="login">
 <div class="login-card">
 <h3>🔐 ATLAS MDT POLICIAL</h3>
+
 <input id="user" placeholder="Usuário">
 <input id="pass" type="password" placeholder="Senha">
+
 <select id="role">
-<option value="pm">Policial</option>
-<option value="staff">Staff</option>
-<option value="admin">Admin</option>
+<option value="pm">Policial Militar</option>
+<option value="pc">Policial Civil</option>
+<option value="juridico">Jurídico</option>
 </select>
+
 <button onclick="register()">Cadastrar</button>
 <button onclick="login()">Entrar</button>
 </div>
@@ -125,7 +128,7 @@ border-radius:6px;
 <div id="app">
 
 <div class="topbar">
-<span>ATLAS MDT PRO</span>
+<span>ATLAS MDT POLICIAL</span>
 <button onclick="logout()">Sair</button>
 </div>
 
@@ -187,13 +190,13 @@ Multa: $<span id="multa">0</span>
 
 <script>
 
-const webhookURL = "COLOQUE_SEU_WEBHOOK_AQUI";
+const webhookURL = "https://discordapp.com/api/webhooks/1501244387185790986/6DLO24Eu_c-MZVNBJ7ZmcVX2RCw4SQA-3udA5UjV5gTp28jCH6YBO_SupKqVOKmqc9V0";
 
 /* LOGIN */
 function register(){
 localStorage.setItem(user.value, JSON.stringify({
-pass:pass.value,
-role:role.value
+pass: pass.value,
+role: role.value
 }));
 alert("Conta criada");
 }
@@ -210,8 +213,11 @@ start();
 }
 
 function start(){
-login.style.display="none";
-app.style.display="block";
+const loginBox = document.getElementById("login");
+const appBox = document.getElementById("app");
+
+loginBox.style.display = "none";
+appBox.style.display = "block";
 }
 
 if(localStorage.getItem("logado")) start();
@@ -263,13 +269,13 @@ function remove(i){crimes.splice(i,1);render();}
 
 /* BO */
 function saveBO(){
-localStorage.setItem("bo",bo.value);
+localStorage.setItem("bo", bo.value);
 alert("BO salvo");
 }
 
 bo.value = localStorage.getItem("bo") || "";
 
-/* WEBHOOK DISCORD */
+/* WEBHOOK */
 function sendWebhook(){
 
 const userLogado = localStorage.getItem("logado");
@@ -283,9 +289,9 @@ embeds:[{
 title:"📄 NOVO BO REGISTRADO",
 color:3447003,
 fields:[
-{name:"👮 Oficial",value:userLogado,inline:true},
-{name:"📍 Sistema",value:"MDT ATLAS PRO",inline:true},
-{name:"📝 Conteúdo",value:bo.value || "Sem descrição"}
+{name:"👮 Usuário",value:userLogado,inline:true},
+{name:"📍 Sistema",value:"MDT POLICIAL",inline:true},
+{name:"📝 BO",value:bo.value || "Sem descrição"}
 ]
 }]
 })
