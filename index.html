@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>ATLAS MDT POLICIAL</title>
+<title>ATLAS MDT PRO MAX</title>
 
 <style>
 body{
@@ -77,11 +77,7 @@ background:#00d4ff;
 color:#000;
 }
 
-.tab{
-display:none;
-padding:10px;
-}
-
+.tab{display:none;padding:10px;}
 .tab.active{display:block;}
 
 .card{
@@ -107,18 +103,11 @@ border-radius:6px;
 <!-- LOGIN -->
 <div id="loginBox">
 <div class="login-card">
-<h3>🔐 ATLAS MDT POLICIAL</h3>
+<h3>🔐 ATLAS MDT PRO MAX</h3>
 
 <input id="user" placeholder="Usuário">
 <input id="pass" type="password" placeholder="Senha">
 
-<select id="role">
-<option value="pm">Policial Militar</option>
-<option value="pc">Policial Civil</option>
-<option value="juridico">Jurídico</option>
-</select>
-
-<button onclick="register()">Cadastrar</button>
 <button onclick="login()">Entrar</button>
 </div>
 </div>
@@ -127,74 +116,18 @@ border-radius:6px;
 <div id="app">
 
 <div class="topbar">
-<span>ATLAS MDT POLICIAL</span>
+<span>MDT PRO MAX</span>
 <button onclick="logout()">Sair</button>
 </div>
 
 <div class="tabs">
-<button class="active" onclick="tab(0)">Código Penal</button>
-<button onclick="tab(1)">Consulta</button>
-<button onclick="tab(2)">BO</button>
-<button onclick="tab(3)">Admin</button>
-</div>
-
-<!-- CÓDIGO PENAL -->
-<div class="tab active">
-
-<div class="card">
-<h3>📚 Código Penal</h3>
-
-<select id="crime">
-<option value="homicidio_culposo">Art.123 Homicídio Culposo</option>
-<option value="omissao">Art.124 Omissão de Socorro</option>
-<option value="sequestro">Art.159 Sequestro</option>
-<option value="dano">Art.160 Dano ao Patrimônio</option>
-<option value="receptacao">Art.161 Receptação</option>
-<option value="dui">Art.162 DUI</option>
-<option value="atropelamento">Art.163 Atropelamento</option>
-<option value="desacato">Art.164 Desacato</option>
-<option value="resistencia">Art.165 Resistência à Prisão</option>
-<option value="obstrucao">Art.166 Obstrução de Justiça</option>
-<option value="porte">Art.167 Porte Ilegal de Arma</option>
-<option value="disparo">Art.168 Disparo em Via Pública</option>
-<option value="fraude">Art.169 Fraude Bancária</option>
-<option value="invasao">Art.170 Invasão de Sistema</option>
-<option value="identidade">Art.171 Falsa Identidade</option>
-<option value="calunia">Art.172 Denunciação Caluniosa</option>
-<option value="corrupcao">Art.173 Corrupção Ativa</option>
-<option value="lavagem">Art.174 Lavagem de Dinheiro</option>
-<option value="organizacao">Art.175 Organização Criminosa</option>
-<option value="trafico_armas">Art.176 Tráfico de Armas</option>
-<option value="evasao">Art.177 Evasão de Prisão</option>
-<option value="assalto_banco">Art.178 Assalto a Banco</option>
-<option value="sequestro_relampago">Art.179 Sequestro Relâmpago</option>
-<option value="homicidio_qualificado">Art.180 Homicídio Qualificado</option>
-<option value="cyberstalking">Art.181 Cyberstalking</option>
-<option value="extorsao_qualificada">Art.182 Extorsão Qualificada</option>
-</select>
-
-<button onclick="addCrime()">Adicionar</button>
-<div id="list"></div>
-</div>
-
-<div class="card">
-Tempo: <span id="tempo">0</span> meses<br>
-Multa: $<span id="multa">0</span>
-</div>
-
-</div>
-
-<!-- CONSULTA -->
-<div class="tab">
-<div class="card">
-<h3>🔎 Consulta</h3>
-<input placeholder="Nome / CPF / Placa">
-<button>Buscar</button>
-</div>
+<button class="active" onclick="tab(0)">BO</button>
+<button onclick="tab(1)">Ficha</button>
 </div>
 
 <!-- BO -->
-<div class="tab">
+<div class="tab active">
+
 <div class="card">
 <h3>📄 BO COMPLETO</h3>
 
@@ -204,19 +137,36 @@ Multa: $<span id="multa">0</span>
 <input id="suspeitoNome" placeholder="Nome do Suspeito">
 <input id="suspeitoId" placeholder="ID do Suspeito">
 
-<textarea id="bo" rows="6" placeholder="Descrição do Ocorrido"></textarea>
+<textarea id="bo" rows="5" placeholder="Descrição"></textarea>
 
-<button onclick="saveBO()">Salvar BO</button>
-<button onclick="sendWebhook()">Enviar Relatório Discord</button>
-</div>
+<select id="crime">
+<option value="homicidio">Homicídio</option>
+<option value="roubo">Roubo</option>
+<option value="sequestro">Sequestro</option>
+<option value="fraude">Fraude</option>
+<option value="invasao">Invasão Sistema</option>
+</select>
+
+<button onclick="addCrime()">Adicionar Crime</button>
+
+<div id="lista"></div>
+
+<button onclick="finalizarBO()">Finalizar BO</button>
 </div>
 
-<!-- ADMIN -->
+</div>
+
+<!-- FICHA -->
 <div class="tab">
+
 <div class="card">
-<h3>⚙️ Admin</h3>
-<button onclick="clearAll()">Reset Sistema</button>
+<h3>🪪 FICHA CRIMINAL</h3>
+<input id="buscarId" placeholder="ID do suspeito">
+<button onclick="buscarFicha()">Buscar</button>
+
+<div id="ficha"></div>
 </div>
+
 </div>
 
 </div>
@@ -225,53 +175,13 @@ Multa: $<span id="multa">0</span>
 
 const webhookURL = "https://discordapp.com/api/webhooks/1501244387185790986/6DLO24Eu_c-MZVNBJ7ZmcVX2RCw4SQA-3udA5UjV5gTp28jCH6YBO_SupKqVOKmqc9V0";
 
-/* LOG */
-function logDiscord(title, desc){
-fetch(webhookURL,{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({
-username:"ATLAS MDT LOG",
-embeds:[{
-title:title,
-description:desc,
-color:3447003,
-timestamp:new Date().toISOString()
-}]
-})
-});
-}
+let crimes = [];
+let db = JSON.parse(localStorage.getItem("db") || "{}");
 
-/* LOGIN */
-function register(){
-localStorage.setItem(user.value, JSON.stringify({
-pass: pass.value,
-role: role.value
-}));
-alert("Conta criada");
-}
-
+/* LOGIN SIMPLES */
 function login(){
-let data = localStorage.getItem(user.value);
-
-if(!data){
-alert("Usuário não existe");
-return;
-}
-
-data = JSON.parse(data);
-
-if(data.pass !== pass.value){
-alert("Senha incorreta");
-return;
-}
-
 localStorage.setItem("logado", user.value);
 start();
-
-logDiscord("🔐 LOGIN",
-`Usuário: ${user.value}
-Cargo: ${data.role}`);
 }
 
 function start(){
@@ -295,165 +205,75 @@ document.querySelectorAll(".tab")[i].classList.add("active");
 document.querySelectorAll(".tabs button")[i].classList.add("active");
 }
 
-/* DB */
-const db = {
-homicidio_culposo:{t:25,m:60000},
-omissao:{t:15,m:35000},
-sequestro:{t:60,m:180000},
-dano:{t:15,m:30000},
-receptacao:{t:25,m:60000},
-dui:{t:18,m:40000},
-atropelamento:{t:30,m:80000},
-desacato:{t:10,m:20000},
-resistencia:{t:20,m:50000},
-obstrucao:{t:35,m:90000},
-porte:{t:30,m:80000},
-disparo:{t:40,m:120000},
-fraude:{t:35,m:90000},
-invasao:{t:45,m:130000},
-identidade:{t:25,m:60000},
-calunia:{t:30,m:75000},
-corrupcao:{t:40,m:120000},
-lavagem:{t:60,m:200000},
-organizacao:{t:70,m:250000},
-trafico_armas:{t:55,m:180000},
-evasao:{t:30,m:90000},
-assalto_banco:{t:80,m:300000},
-sequestro_relampago:{t:50,m:150000},
-homicidio_qualificado:{t:90,m:350000},
-cyberstalking:{t:20,m:60000},
-extorsao_qualificada:{t:60,m:220000}
-};
-
-let crimes=[];
-
 /* CRIMES */
 function addCrime(){
 crimes.push(crime.value);
-render();
 
-logDiscord("⚖️ Crime Adicionado",
-`Usuário: ${localStorage.getItem("logado")}
-Crime: ${crime.value}`);
+lista.innerHTML += `<div class="crime">${crime.value}</div>`;
 }
 
-function remove(i){
+/* FINALIZAR BO + FICHA */
+function finalizarBO(){
 
-logDiscord("❌ Crime Removido",
-`Usuário: ${localStorage.getItem("logado")}
-Crime: ${crimes[i]}`);
+let id = document.getElementById("suspeitoId").value;
+let nome = document.getElementById("suspeitoNome").value;
 
-crimes.splice(i,1);
-render();
+if(!db[id]){
+db[id] = {nome:nome, ocorrencias:[]};
 }
 
-function render(){
-list.innerHTML="";
-let t=0,m=0;
-
-crimes.forEach((c,i)=>{
-t+=db[c].t;
-m+=db[c].m;
-
-list.innerHTML+=`
-<div class='crime'>
-${c}
-<button onclick='remove(${i})'>X</button>
-</div>`;
+db[id].ocorrencias.push({
+crime: crimes,
+bo: document.getElementById("bo").value,
+oficial: document.getElementById("oficialNome").value,
+oficialId: document.getElementById("oficialId").value
 });
 
-tempo.innerText=t;
-multa.innerText=m;
-}
+localStorage.setItem("db", JSON.stringify(db));
 
-/* BO SALVO */
-function saveBO(){
-
-let boTexto = document.getElementById("bo").value.trim();
-
-if(!boTexto){
-alert("BO vazio!");
-return;
-}
-
-localStorage.setItem("bo", boTexto);
-
-logDiscord("📄 BO SALVO",
-`Usuário: ${localStorage.getItem("logado")}
-${boTexto}`);
-
-alert("BO salvo!");
-}
-
-/* RELATÓRIO COMPLETO */
-function sendWebhook(){
-
-const userLogado = localStorage.getItem("logado");
-
-let boTexto = document.getElementById("bo").value.trim();
-
-if(!boTexto){
-alert("BO vazio!");
-return;
-}
-
-let oficialNome = document.getElementById("oficialNome").value || "Não informado";
-let oficialId = document.getElementById("oficialId").value || "Não informado";
-
-let suspeitoNome = document.getElementById("suspeitoNome").value || "Não informado";
-let suspeitoId = document.getElementById("suspeitoId").value || "Não informado";
-
-let crimesTexto = crimes.map(c => `• ${c}`).join("\n");
-
-let relatorio = `
-📄 RELATÓRIO MDT ATLAS
-
-👮 OFICIAL:
-${oficialNome} | ID: ${oficialId}
-
-👤 SUSPEITO:
-${suspeitoNome} | ID: ${suspeitoId}
-
-⚖️ CRIMES:
-${crimesTexto || "Nenhum crime"}
-
-⏱️ Tempo: ${tempo.innerText} meses
-💰 Multa: $${multa.innerText}
-
-📝 DESCRIÇÃO:
-${boTexto}
+let texto = `
+👮 OFICIAL: ${document.getElementById("oficialNome").value} (${document.getElementById("oficialId").value})
+👤 SUSPEITO: ${nome} (${id})
+⚖️ CRIMES: ${crimes.join(", ")}
+📝 BO: ${document.getElementById("bo").value}
 `;
 
 fetch(webhookURL,{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
-username:"ATLAS MDT POLICIAL",
+username:"MDT PRO MAX",
 embeds:[{
-title:"📄 RELATÓRIO COMPLETO",
-description:"```" + relatorio + "```",
+title:"📄 NOVO BO REGISTRADO",
+description:"```"+texto+"```",
 color:3447003
 }]
 })
 });
 
-logDiscord("📤 RELATÓRIO ENVIADO",
-`Oficial: ${oficialNome} | Suspeito: ${suspeitoNome}`);
-
-alert("Relatório enviado!");
+alert("BO finalizado e salvo na ficha!");
+crimes=[];
+lista.innerHTML="";
 }
 
-/* RESET */
-function clearAll(){
+/* FICHA */
+function buscarFicha(){
 
-logDiscord("🧹 RESET",
-`Usuário: ${localStorage.getItem("logado")} resetou sistema`);
+let id = buscarId.value;
 
-localStorage.clear();
-location.reload();
+let data = db[id];
+
+if(!data){
+ficha.innerHTML = "Sem registros";
+return;
 }
 
-bo.value = localStorage.getItem("bo") || "";
+ficha.innerHTML = `
+<h4>${data.nome}</h4>
+<p>ID: ${id}</p>
+<p>Ocorrências: ${data.ocorrencias.length}</p>
+`;
+}
 
 </script>
 
