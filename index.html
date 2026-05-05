@@ -142,7 +142,7 @@ border-radius:6px;
 <div class="tab active">
 
 <div class="card">
-<h3>📚 Código Penal Completo</h3>
+<h3>📚 Código Penal</h3>
 
 <select id="crime">
 <option value="homicidio_culposo">Art.123 Homicídio Culposo</option>
@@ -358,20 +358,36 @@ tempo.innerText=t;
 multa.innerText=m;
 }
 
-/* BO */
+/* BO SALVO */
 function saveBO(){
-localStorage.setItem("bo",bo.value);
-alert("BO salvo");
+
+let boTexto = document.getElementById("bo").value.trim();
+
+if(boTexto.length === 0){
+alert("BO está vazio!");
+return;
+}
+
+localStorage.setItem("bo", boTexto);
 
 logDiscord("📄 BO SALVO",
 `Usuário: ${localStorage.getItem("logado")}
-${bo.value}`);
+${boTexto}`);
+
+alert("BO salvo!");
 }
 
-/* RELATÓRIO CORRIGIDO */
+/* RELATÓRIO */
 function sendWebhook(){
 
 const userLogado = localStorage.getItem("logado");
+
+let boTexto = document.getElementById("bo").value.trim();
+
+if(boTexto.length === 0){
+alert("BO vazio!");
+return;
+}
 
 let crimesTexto = crimes.map(c => `• ${c}`).join("\n");
 
@@ -387,14 +403,14 @@ ${crimesTexto || "Nenhum crime"}
 💰 Multa: $${multa.innerText}
 
 📝 BO:
-${bo.value || "Sem descrição"}
+${boTexto}
 `;
 
 fetch(webhookURL,{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
-username:"ATLAS MDT POLICIAL",
+username:"ATLAS MDT",
 embeds:[{
 title:"📄 RELATÓRIO GERADO",
 description:"```" + relatorio + "```",
@@ -413,7 +429,7 @@ alert("Relatório enviado!");
 function clearAll(){
 
 logDiscord("🧹 RESET",
-`Usuário: ${localStorage.getItem("logado")} resetou o sistema`);
+`Usuário: ${localStorage.getItem("logado")} resetou sistema`);
 
 localStorage.clear();
 location.reload();
