@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>ATLAS MDT PRO</title>
+<title>ATLAS MDT POLICIAL</title>
 
 <style>
 body{
@@ -46,6 +46,8 @@ border:none;
 cursor:pointer;
 border-radius:6px;
 font-weight:bold;
+width:100%;
+margin-top:5px;
 }
 
 /* APP */
@@ -99,7 +101,6 @@ background:#000;
 margin-top:5px;
 border-radius:6px;
 }
-
 </style>
 </head>
 <body>
@@ -143,7 +144,7 @@ border-radius:6px;
 <option value="homicidio">Homicídio</option>
 <option value="roubo">Roubo</option>
 <option value="fraude">Fraude Bancária</option>
-<option value="invasao">Invasão Bancária</option>
+<option value="invasao">Invasão à Rede Bancária</option>
 </select>
 <button onclick="addCrime()">Adicionar</button>
 <div id="list"></div>
@@ -169,16 +170,16 @@ Multa: $<span id="multa">0</span>
 <div class="card">
 <h3>📄 BO</h3>
 <textarea id="bo" rows="10"></textarea>
-<button onclick="saveBO()">Salvar</button>
+<button onclick="saveBO()">Salvar BO</button>
+<button onclick="sendWebhook()">Enviar para Discord</button>
 </div>
 </div>
 
 <!-- ADMIN -->
 <div class="tab">
 <div class="card">
-<h3>⚙️ Admin Panel</h3>
-<button onclick="clearAll()">Limpar Dados</button>
-<button onclick="sendWebhook()">Enviar para Discord</button>
+<h3>⚙️ Admin</h3>
+<button onclick="clearAll()">Limpar Sistema</button>
 </div>
 </div>
 
@@ -186,16 +187,9 @@ Multa: $<span id="multa">0</span>
 
 <script>
 
-let crimesDB={
-homicidio:{t:50,m:100000},
-roubo:{t:35,m:80000},
-fraude:{t:40,m:90000},
-invasao:{t:60,m:120000}
-};
+const webhookURL = "COLOQUE_SEU_WEBHOOK_AQUI";
 
-let crimes=[];
-
-/* AUTH */
+/* LOGIN */
 function register(){
 localStorage.setItem(user.value, JSON.stringify({
 pass:pass.value,
@@ -205,13 +199,13 @@ alert("Conta criada");
 }
 
 function login(){
-let data=localStorage.getItem(user.value);
-if(!data)return alert("Usuário não existe");
+let data = localStorage.getItem(user.value);
+if(!data) return alert("Usuário não existe");
 
-data=JSON.parse(data);
-if(data.pass!==pass.value)return alert("Senha errada");
+data = JSON.parse(data);
+if(data.pass !== pass.value) return alert("Senha incorreta");
 
-localStorage.setItem("logado",user.value);
+localStorage.setItem("logado", user.value);
 start();
 }
 
@@ -220,9 +214,12 @@ login.style.display="none";
 app.style.display="block";
 }
 
-if(localStorage.getItem("logado"))start();
+if(localStorage.getItem("logado")) start();
 
-function logout(){localStorage.clear();location.reload();}
+function logout(){
+localStorage.clear();
+location.reload();
+}
 
 /* TABS */
 function tab(i){
@@ -234,9 +231,17 @@ document.querySelectorAll(".tabs button")[i].classList.add("active");
 }
 
 /* CRIMES */
+const db = {
+homicidio:{t:50,m:100000},
+roubo:{t:35,m:80000},
+fraude:{t:40,m:90000},
+invasao:{t:60,m:120000}
+};
+
+let crimes=[];
+
 function addCrime(){
-let c=crime.value;
-crimes.push(c);
+crimes.push(crime.value);
 render();
 }
 
@@ -245,8 +250,8 @@ list.innerHTML="";
 let t=0,m=0;
 
 crimes.forEach((c,i)=>{
-t+=crimesDB[c].t;
-m+=crimesDB[c].m;
+t+=db[c].t;
+m+=db[c].m;
 list.innerHTML+=`<div class='crime'>${c}<button onclick='remove(${i})'>X</button></div>`;
 });
 
@@ -259,20 +264,41 @@ function remove(i){crimes.splice(i,1);render();}
 /* BO */
 function saveBO(){
 localStorage.setItem("bo",bo.value);
-alert("Salvo");
+alert("BO salvo");
 }
-bo.value=localStorage.getItem("bo")||"";
 
-/* ADMIN */
-function clearAll(){localStorage.clear();alert("Resetado");}
+bo.value = localStorage.getItem("bo") || "";
 
+/* WEBHOOK DISCORD */
 function sendWebhook(){
-fetch("https://discordapp.com/api/webhooks/1501244387185790986/6DLO24Eu_c-MZVNBJ7ZmcVX2RCw4SQA-3udA5UjV5gTp28jCH6YBO_SupKqVOKmqc9V0",{
+
+const userLogado = localStorage.getItem("logado");
+
+fetch(webhookURL,{
 method:"POST",
 headers:{"Content-Type":"application/json"},
-body:JSON.stringify({content:"Novo BO gerado no MDT ATLAS"})
+body:JSON.stringify({
+username:"ATLAS MDT PRO",
+embeds:[{
+title:"📄 NOVO BO REGISTRADO",
+color:3447003,
+fields:[
+{name:"👮 Oficial",value:userLogado,inline:true},
+{name:"📍 Sistema",value:"MDT ATLAS PRO",inline:true},
+{name:"📝 Conteúdo",value:bo.value || "Sem descrição"}
+]
+}]
+})
 });
-alert("Enviado");
+
+alert("Enviado para Discord!");
+}
+
+/* ADMIN */
+function clearAll(){
+localStorage.clear();
+alert("Sistema resetado");
+location.reload();
 }
 
 </script>
