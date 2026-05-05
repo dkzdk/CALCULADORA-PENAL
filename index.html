@@ -196,8 +196,16 @@ Multa: $<span id="multa">0</span>
 <!-- BO -->
 <div class="tab">
 <div class="card">
-<h3>📄 BO</h3>
-<textarea id="bo" rows="10"></textarea>
+<h3>📄 BO COMPLETO</h3>
+
+<input id="oficialNome" placeholder="Nome do Oficial">
+<input id="oficialId" placeholder="ID do Oficial">
+
+<input id="suspeitoNome" placeholder="Nome do Suspeito">
+<input id="suspeitoId" placeholder="ID do Suspeito">
+
+<textarea id="bo" rows="6" placeholder="Descrição do Ocorrido"></textarea>
+
 <button onclick="saveBO()">Salvar BO</button>
 <button onclick="sendWebhook()">Enviar Relatório Discord</button>
 </div>
@@ -363,8 +371,8 @@ function saveBO(){
 
 let boTexto = document.getElementById("bo").value.trim();
 
-if(boTexto.length === 0){
-alert("BO está vazio!");
+if(!boTexto){
+alert("BO vazio!");
 return;
 }
 
@@ -377,24 +385,34 @@ ${boTexto}`);
 alert("BO salvo!");
 }
 
-/* RELATÓRIO */
+/* RELATÓRIO COMPLETO */
 function sendWebhook(){
 
 const userLogado = localStorage.getItem("logado");
 
 let boTexto = document.getElementById("bo").value.trim();
 
-if(boTexto.length === 0){
+if(!boTexto){
 alert("BO vazio!");
 return;
 }
+
+let oficialNome = document.getElementById("oficialNome").value || "Não informado";
+let oficialId = document.getElementById("oficialId").value || "Não informado";
+
+let suspeitoNome = document.getElementById("suspeitoNome").value || "Não informado";
+let suspeitoId = document.getElementById("suspeitoId").value || "Não informado";
 
 let crimesTexto = crimes.map(c => `• ${c}`).join("\n");
 
 let relatorio = `
 📄 RELATÓRIO MDT ATLAS
 
-👮 Usuário: ${userLogado}
+👮 OFICIAL:
+${oficialNome} | ID: ${oficialId}
+
+👤 SUSPEITO:
+${suspeitoNome} | ID: ${suspeitoId}
 
 ⚖️ CRIMES:
 ${crimesTexto || "Nenhum crime"}
@@ -402,7 +420,7 @@ ${crimesTexto || "Nenhum crime"}
 ⏱️ Tempo: ${tempo.innerText} meses
 💰 Multa: $${multa.innerText}
 
-📝 BO:
+📝 DESCRIÇÃO:
 ${boTexto}
 `;
 
@@ -410,9 +428,9 @@ fetch(webhookURL,{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
-username:"ATLAS MDT",
+username:"ATLAS MDT POLICIAL",
 embeds:[{
-title:"📄 RELATÓRIO GERADO",
+title:"📄 RELATÓRIO COMPLETO",
 description:"```" + relatorio + "```",
 color:3447003
 }]
@@ -420,7 +438,7 @@ color:3447003
 });
 
 logDiscord("📤 RELATÓRIO ENVIADO",
-`Usuário: ${userLogado}`);
+`Oficial: ${oficialNome} | Suspeito: ${suspeitoNome}`);
 
 alert("Relatório enviado!");
 }
