@@ -12,14 +12,17 @@ body{
     color:#00d4ff;
 }
 
+/* TERMINAL */
 .terminal{
     background:#000;
     color:#00ff9c;
     padding:10px;
     height:120px;
     overflow:auto;
+    font-family:monospace;
 }
 
+/* GRID */
 .container{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
@@ -29,34 +32,83 @@ body{
 
 .card{
     background:#0a0f18;
-    padding:10px;
+    padding:12px;
     border-radius:10px;
 }
 
-input,select{
+/* INPUTS */
+input{
     width:100%;
     padding:8px;
     margin:5px 0;
+    background:#050a14;
+    border:1px solid #1a2a3a;
+    color:white;
+    border-radius:6px;
 }
 
+/* SELECT MELHORADO */
+select{
+    width:100%;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid rgba(0,212,255,0.3);
+    background:#050a14;
+    color:#00d4ff;
+    font-weight:600;
+    cursor:pointer;
+    outline:none;
+    appearance:none;
+
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%2300d4ff' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat:no-repeat;
+    background-position:right 10px center;
+    background-size:18px;
+}
+
+select:hover{
+    box-shadow:0 0 10px #00d4ff;
+}
+
+/* BUTTON */
 button{
-    padding:8px;
+    padding:8px 12px;
     background:#00d4ff;
     border:none;
     cursor:pointer;
+    border-radius:6px;
+    font-weight:bold;
 }
 
+/* LISTA CRIMES */
 .crime-item{
     display:flex;
     justify-content:space-between;
     background:#000;
     padding:6px;
     margin-top:5px;
+    border-radius:6px;
 }
 
 .crime-item button{
     background:red;
     color:white;
+}
+
+/* RESULTADO */
+.resultado span{
+    color:#00ffae;
+    font-weight:bold;
+}
+
+/* TEXTAREA */
+textarea{
+    width:100%;
+    height:180px;
+    background:#000;
+    color:#00ff9c;
+    border:none;
+    padding:10px;
 }
 </style>
 </head>
@@ -67,12 +119,14 @@ button{
 
 <div class="container">
 
+<!-- DADOS -->
 <div class="card">
 <h3>👤 Dados</h3>
 <input id="suspeito" placeholder="Suspeito">
 <input id="oficial" placeholder="Oficial">
 </div>
 
+<!-- CRIMES -->
 <div class="card">
 <h3>📚 Código Penal</h3>
 
@@ -82,53 +136,49 @@ button{
 <option value="homicidio">Homicídio</option>
 <option value="tentativa">Tentativa de Homicídio</option>
 <option value="lesao">Lesão Corporal</option>
-<option value="culposo">Homicídio Culposo</option>
-<option value="omissao">Omissão de Socorro</option>
 
-<!-- PATRIMONIO -->
+<!-- PATRIMÔNIO -->
 <option value="furto">Furto</option>
 <option value="roubo">Roubo</option>
 <option value="extorsao">Extorsão</option>
-<option value="sequestro">Sequestro</option>
-<option value="receptacao">Receptação</option>
 
-<!-- TRANSITO -->
+<!-- TRÂNSITO -->
 <option value="fuga">Fuga de Abordagem</option>
 <option value="racha">Racha Ilegal</option>
-<option value="dui">Direção Sob Influência</option>
 
 <!-- AUTORIDADE -->
 <option value="desacato">Desacato</option>
 <option value="resistencia">Resistência</option>
 
 <!-- ARMAS -->
-<option value="porte">Porte Ilegal de Arma</option>
-<option value="disparo">Disparo em Via Pública</option>
+<option value="porte">Porte de Arma</option>
 
-<!-- DIGITAL (ALTERADO) -->
-<option value="fraude_banco">Fraude Bancária</option>
+<!-- DIGITAL -->
+<option value="fraude">Fraude Bancária</option>
 <option value="invasao_banco">Invasão à Rede Bancária</option>
 
 </select>
 
-<button onclick="addCrime()">Adicionar</button>
+<button onclick="addCrime()">Adicionar Crime</button>
 
 <div id="lista"></div>
-
 </div>
 
+<!-- MODIFICADORES -->
 <div class="card">
 <h3>⚙️ Modificadores</h3>
 <label><input type="checkbox" id="reincidencia"> Reincidência</label><br>
 <label><input type="checkbox" id="cooperacao"> Cooperação</label>
 </div>
 
-<div class="card">
+<!-- RESULTADO -->
+<div class="card resultado">
 <h3>📊 Resultado</h3>
-<p>Tempo: <span id="tempo">0</span></p>
+<p>Tempo: <span id="tempo">0</span> meses</p>
 <p>Multa: $<span id="multa">0</span></p>
 </div>
 
+<!-- RELATÓRIO -->
 <div class="card">
 <h3>📄 Relatório</h3>
 <button onclick="gerar()">Gerar</button>
@@ -141,33 +191,27 @@ button{
 
 <script>
 
+/* BANCO DE DADOS */
 const crimesDB = {
 
 homicidio:{nome:"Art.121 Homicídio",tempo:45,multa:100000},
 tentativa:{nome:"Art.122 Tentativa",tempo:25,multa:70000},
 lesao:{nome:"Art.129 Lesão",tempo:20,multa:30000},
-culposo:{nome:"Art.123 Culposo",tempo:25,multa:60000},
-omissao:{nome:"Art.124 Omissão",tempo:15,multa:30000},
 
 furto:{nome:"Art.155 Furto",tempo:20,multa:30000},
 roubo:{nome:"Art.157 Roubo",tempo:35,multa:80000},
 extorsao:{nome:"Art.158 Extorsão",tempo:40,multa:100000},
-sequestro:{nome:"Art.159 Sequestro",tempo:60,multa:150000},
-receptacao:{nome:"Art.161 Receptação",tempo:25,multa:60000},
 
 fuga:{nome:"Fuga de Abordagem",tempo:25,multa:60000},
 racha:{nome:"Racha Ilegal",tempo:20,multa:50000},
-dui:{nome:"Direção Sob Influência",tempo:20,multa:40000},
 
-desacato:{nome:"Art.164 Desacato",tempo:10,multa:20000},
-resistencia:{nome:"Art.165 Resistência",tempo:20,multa:50000},
+desacato:{nome:"Desacato",tempo:10,multa:20000},
+resistencia:{nome:"Resistência",tempo:20,multa:50000},
 
-porte:{nome:"Art.167 Porte Ilegal",tempo:30,multa:80000},
-disparo:{nome:"Art.168 Disparo",tempo:40,multa:100000},
+porte:{nome:"Porte de Arma",tempo:30,multa:80000},
 
-/* DIGITAL ALTERADO */
-fraude_banco:{nome:"Art.169 Fraude Bancária",tempo:35,multa:90000},
-invasao_banco:{nome:"Art.170 Invasão à Rede Bancária",tempo:50,multa:120000}
+fraude:{nome:"Fraude Bancária",tempo:35,multa:90000},
+invasao_banco:{nome:"Invasão à Rede Bancária",tempo:50,multa:120000}
 
 };
 
@@ -179,19 +223,23 @@ function log(msg){
     terminal.scrollTop = terminal.scrollHeight;
 }
 
-/* CRIMES */
+/* ADD CRIME */
 function addCrime(){
     const id = crime.value;
     lista.push(id);
 
+    som.currentTime = 0;
     som.play().catch(()=>{});
 
     log("[ADD] "+crimesDB[id].nome);
+
     render();
 }
 
+/* RENDER LISTA */
 function render(){
     listaDiv.innerHTML = "";
+
     lista.forEach((c,i)=>{
         listaDiv.innerHTML += `
         <div class="crime-item">
@@ -199,9 +247,11 @@ function render(){
         <button onclick="remover(${i})">X</button>
         </div>`;
     });
+
     calcular();
 }
 
+/* REMOVER */
 function remover(i){
     lista.splice(i,1);
     log("[REMOVIDO]");
@@ -217,22 +267,30 @@ function calcular(){
         m+=crimesDB[c].multa;
     });
 
-    if(reincidencia.checked){t*=1.5;m*=1.5;}
-    if(cooperacao.checked){t*=0.7;m*=0.7;}
+    if(reincidencia.checked){
+        t*=1.5;
+        m*=1.5;
+    }
 
-    tempo.innerText=Math.round(t);
-    multa.innerText=Math.round(m);
+    if(cooperacao.checked){
+        t*=0.7;
+        m*=0.7;
+    }
+
+    tempo.innerText = Math.round(t);
+    multa.innerText = Math.round(m);
 }
 
-reincidencia.onchange=calcular;
-cooperacao.onchange=calcular;
+/* AUTO UPDATE */
+reincidencia.onchange = calcular;
+cooperacao.onchange = calcular;
 
-/* RELATORIO */
+/* RELATÓRIO */
 function gerar(){
     calcular();
 
-    relatorio.value=
-`RELATÓRIO ATLAS
+    relatorio.value =
+`RELATÓRIO ATLAS MDT
 
 Suspeito: ${suspeito.value}
 Oficial: ${oficial.value}
