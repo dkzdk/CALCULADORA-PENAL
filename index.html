@@ -12,7 +12,6 @@ background:#020611;
 color:#00d4ff;
 }
 
-/* LOGIN */
 #login{
 position:fixed;
 inset:0;
@@ -40,17 +39,16 @@ border-radius:6px;
 }
 
 button{
+width:100%;
 padding:8px;
 background:#00d4ff;
 border:none;
 cursor:pointer;
 border-radius:6px;
 font-weight:bold;
-width:100%;
 margin-top:5px;
 }
 
-/* APP */
 #app{display:none;}
 
 .topbar{
@@ -103,10 +101,11 @@ border-radius:6px;
 }
 </style>
 </head>
+
 <body>
 
 <!-- LOGIN -->
-<div id="login">
+<div id="loginBox">
 <div class="login-card">
 <h3>🔐 ATLAS MDT POLICIAL</h3>
 
@@ -139,16 +138,17 @@ border-radius:6px;
 <button onclick="tab(3)">Admin</button>
 </div>
 
-<!-- CP -->
 <div class="tab active">
 <div class="card">
 <h3>📚 Código Penal</h3>
+
 <select id="crime">
 <option value="homicidio">Homicídio</option>
 <option value="roubo">Roubo</option>
 <option value="fraude">Fraude Bancária</option>
-<option value="invasao">Invasão à Rede Bancária</option>
+<option value="invasao">Invasão Bancária</option>
 </select>
+
 <button onclick="addCrime()">Adicionar</button>
 <div id="list"></div>
 </div>
@@ -159,7 +159,6 @@ Multa: $<span id="multa">0</span>
 </div>
 </div>
 
-<!-- CONSULTA -->
 <div class="tab">
 <div class="card">
 <h3>🔎 Consulta</h3>
@@ -168,21 +167,19 @@ Multa: $<span id="multa">0</span>
 </div>
 </div>
 
-<!-- BO -->
 <div class="tab">
 <div class="card">
 <h3>📄 BO</h3>
 <textarea id="bo" rows="10"></textarea>
 <button onclick="saveBO()">Salvar BO</button>
-<button onclick="sendWebhook()">Enviar para Discord</button>
+<button onclick="sendWebhook()">Enviar Discord</button>
 </div>
 </div>
 
-<!-- ADMIN -->
 <div class="tab">
 <div class="card">
 <h3>⚙️ Admin</h3>
-<button onclick="clearAll()">Limpar Sistema</button>
+<button onclick="clearAll()">Reset Sistema</button>
 </div>
 </div>
 
@@ -192,7 +189,6 @@ Multa: $<span id="multa">0</span>
 
 const webhookURL = "https://discordapp.com/api/webhooks/1501244387185790986/6DLO24Eu_c-MZVNBJ7ZmcVX2RCw4SQA-3udA5UjV5gTp28jCH6YBO_SupKqVOKmqc9V0";
 
-/* LOGIN */
 function register(){
 localStorage.setItem(user.value, JSON.stringify({
 pass: pass.value,
@@ -202,22 +198,28 @@ alert("Conta criada");
 }
 
 function login(){
+
 let data = localStorage.getItem(user.value);
-if(!data) return alert("Usuário não existe");
+
+if(!data){
+alert("Usuário não existe");
+return;
+}
 
 data = JSON.parse(data);
-if(data.pass !== pass.value) return alert("Senha incorreta");
+
+if(data.pass !== pass.value){
+alert("Senha incorreta");
+return;
+}
 
 localStorage.setItem("logado", user.value);
 start();
 }
 
 function start(){
-const loginBox = document.getElementById("login");
-const appBox = document.getElementById("app");
-
-loginBox.style.display = "none";
-appBox.style.display = "block";
+document.getElementById("loginBox").style.display="none";
+document.getElementById("app").style.display="block";
 }
 
 if(localStorage.getItem("logado")) start();
@@ -227,16 +229,14 @@ localStorage.clear();
 location.reload();
 }
 
-/* TABS */
 function tab(i){
-[...document.querySelectorAll(".tab")].forEach(t=>t.classList.remove("active"));
-[...document.querySelectorAll(".tabs button")].forEach(b=>b.classList.remove("active"));
+document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));
 
 document.querySelectorAll(".tab")[i].classList.add("active");
 document.querySelectorAll(".tabs button")[i].classList.add("active");
 }
 
-/* CRIMES */
 const db = {
 homicidio:{t:50,m:100000},
 roubo:{t:35,m:80000},
@@ -258,6 +258,7 @@ let t=0,m=0;
 crimes.forEach((c,i)=>{
 t+=db[c].t;
 m+=db[c].m;
+
 list.innerHTML+=`<div class='crime'>${c}<button onclick='remove(${i})'>X</button></div>`;
 });
 
@@ -265,17 +266,18 @@ tempo.innerText=t;
 multa.innerText=m;
 }
 
-function remove(i){crimes.splice(i,1);render();}
+function remove(i){
+crimes.splice(i,1);
+render();
+}
 
-/* BO */
 function saveBO(){
-localStorage.setItem("bo", bo.value);
+localStorage.setItem("bo",bo.value);
 alert("BO salvo");
 }
 
 bo.value = localStorage.getItem("bo") || "";
 
-/* WEBHOOK */
 function sendWebhook(){
 
 const userLogado = localStorage.getItem("logado");
@@ -286,24 +288,21 @@ headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
 username:"ATLAS MDT POLICIAL",
 embeds:[{
-title:"📄 NOVO BO REGISTRADO",
+title:"📄 NOVO BO",
 color:3447003,
 fields:[
 {name:"👮 Usuário",value:userLogado,inline:true},
-{name:"📍 Sistema",value:"MDT POLICIAL",inline:true},
-{name:"📝 BO",value:bo.value || "Sem descrição"}
+{name:"📝 BO",value:bo.value || "vazio"}
 ]
 }]
 })
 });
 
-alert("Enviado para Discord!");
+alert("Enviado!");
 }
 
-/* ADMIN */
 function clearAll(){
 localStorage.clear();
-alert("Sistema resetado");
 location.reload();
 }
 
