@@ -5,37 +5,106 @@
 <title>ATLAS MDT POLICIAL</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#020611;color:#00d4ff;}
+body{
+margin:0;
+font-family:Arial;
+background:#020611;
+color:#00d4ff;
+}
 
-#loginBox{position:fixed;inset:0;display:flex;justify-content:center;align-items:center;background:#000;}
+#loginBox{
+position:fixed;
+inset:0;
+display:flex;
+justify-content:center;
+align-items:center;
+background:#000;
+}
 
-.login-card{background:#0a0f18;padding:20px;border-radius:10px;width:320px;}
+.login-card{
+background:#0a0f18;
+padding:20px;
+border-radius:10px;
+width:320px;
+}
 
-input,select,textarea{width:100%;padding:10px;margin:5px 0;background:#050a14;border:1px solid #1a2a3a;color:#fff;border-radius:6px;}
+input,select,textarea{
+width:100%;
+padding:10px;
+margin:5px 0;
+background:#050a14;
+border:1px solid #1a2a3a;
+color:#fff;
+border-radius:6px;
+}
 
-button{width:100%;padding:8px;background:#00d4ff;border:none;cursor:pointer;border-radius:6px;font-weight:bold;margin-top:5px;}
+button{
+width:100%;
+padding:8px;
+background:#00d4ff;
+border:none;
+cursor:pointer;
+border-radius:6px;
+font-weight:bold;
+margin-top:5px;
+}
 
 #app{display:none;}
 
-.topbar{background:#000;padding:10px;display:flex;justify-content:space-between;}
+.topbar{
+background:#000;
+padding:10px;
+display:flex;
+justify-content:space-between;
+}
 
-.tabs{display:flex;background:#0a0f18;}
-.tabs button{flex:1;padding:10px;border:none;background:#050a14;color:#00d4ff;cursor:pointer;}
-.tabs button.active{background:#00d4ff;color:#000;}
+.tabs{
+display:flex;
+background:#0a0f18;
+}
 
-.tab{display:none;padding:10px;}
+.tabs button{
+flex:1;
+padding:10px;
+border:none;
+background:#050a14;
+color:#00d4ff;
+cursor:pointer;
+}
+
+.tabs button.active{
+background:#00d4ff;
+color:#000;
+}
+
+.tab{
+display:none;
+padding:10px;
+}
+
 .tab.active{display:block;}
 
-.card{background:#0a0f18;padding:10px;border-radius:10px;margin-bottom:10px;}
+.card{
+background:#0a0f18;
+padding:10px;
+border-radius:10px;
+margin-bottom:10px;
+}
 
-.crime{display:flex;justify-content:space-between;padding:5px;background:#000;margin-top:5px;border-radius:6px;}
-
-.hidden{display:none;}
+.crime{
+display:flex;
+justify-content:space-between;
+padding:5px;
+background:#000;
+margin-top:5px;
+border-radius:6px;
+}
 </style>
 </head>
 
 <body>
 
+<!-- LOGIN -->
 <div id="loginBox">
 <div class="login-card">
 <h3>🔐 ATLAS MDT POLICIAL</h3>
@@ -54,6 +123,7 @@ button{width:100%;padding:8px;background:#00d4ff;border:none;cursor:pointer;bord
 </div>
 </div>
 
+<!-- APP -->
 <div id="app">
 
 <div class="topbar">
@@ -65,42 +135,55 @@ button{width:100%;padding:8px;background:#00d4ff;border:none;cursor:pointer;bord
 <button class="active" onclick="tab(0)">Código Penal</button>
 <button onclick="tab(1)">Consulta</button>
 <button onclick="tab(2)">BO</button>
-<button id="adminTabBtn" class="hidden" onclick="tab(3)">Admin</button>
+<button onclick="tab(3)">Admin</button>
 </div>
 
+<!-- CÓDIGO PENAL -->
 <div class="tab active">
+
 <div class="card">
 <h3>📚 Código Penal Completo</h3>
+
 <select id="crime">
+
 <option value="homicidio_culposo">Art.123 Homicídio Culposo</option>
 <option value="omissao">Art.124 Omissão de Socorro</option>
+
 <option value="sequestro">Art.159 Sequestro</option>
 <option value="dano">Art.160 Dano ao Patrimônio</option>
 <option value="receptacao">Art.161 Receptação</option>
+
 <option value="dui">Art.162 DUI</option>
 <option value="atropelamento">Art.163 Atropelamento</option>
+
 <option value="desacato">Art.164 Desacato</option>
 <option value="resistencia">Art.165 Resistência à Prisão</option>
 <option value="obstrucao">Art.166 Obstrução de Justiça</option>
+
 <option value="porte">Art.167 Porte Ilegal de Arma</option>
 <option value="disparo">Art.168 Disparo em Via Pública</option>
+
 <option value="fraude">Art.169 Fraude Bancária</option>
 <option value="invasao">Art.170 Invasão de Sistema</option>
+
 <option value="identidade">Art.171 Falsa Identidade</option>
 <option value="calunia">Art.172 Denunciação Caluniosa</option>
 
-<!-- NOVOS ARTIGOS -->
 <option value="corrupcao">Art.173 Corrupção Ativa</option>
 <option value="lavagem">Art.174 Lavagem de Dinheiro</option>
 <option value="organizacao">Art.175 Organização Criminosa</option>
 <option value="trafico_armas">Art.176 Tráfico de Armas</option>
 <option value="evasao">Art.177 Evasão de Prisão</option>
+
 <option value="assalto_banco">Art.178 Assalto a Banco</option>
 <option value="sequestro_relampago">Art.179 Sequestro Relâmpago</option>
+
 <option value="homicidio_qualificado">Art.180 Homicídio Qualificado</option>
 <option value="cyberstalking">Art.181 Cyberstalking</option>
 <option value="extorsao_qualificada">Art.182 Extorsão Qualificada</option>
+
 </select>
+
 <button onclick="addCrime()">Adicionar</button>
 <div id="list"></div>
 </div>
@@ -109,8 +192,10 @@ button{width:100%;padding:8px;background:#00d4ff;border:none;cursor:pointer;bord
 Tempo: <span id="tempo">0</span> meses<br>
 Multa: $<span id="multa">0</span>
 </div>
+
 </div>
 
+<!-- CONSULTA -->
 <div class="tab">
 <div class="card">
 <h3>🔎 Consulta</h3>
@@ -119,6 +204,7 @@ Multa: $<span id="multa">0</span>
 </div>
 </div>
 
+<!-- BO -->
 <div class="tab">
 <div class="card">
 <h3>📄 BO</h3>
@@ -128,9 +214,10 @@ Multa: $<span id="multa">0</span>
 </div>
 </div>
 
+<!-- ADMIN -->
 <div class="tab">
 <div class="card">
-<h3>⚙️ Admin (Restrito)</h3>
+<h3>⚙️ Admin</h3>
 <button onclick="clearAll()">Reset Sistema</button>
 </div>
 </div>
@@ -139,60 +226,194 @@ Multa: $<span id="multa">0</span>
 
 <script>
 
-const OWNER="Nicolas";
-const webhookURL="https://discordapp.com/api/webhooks/1501244387185790986/6DLO24Eu_c-MZVNBJ7ZmcVX2RCw4SQA-3udA5UjV5gTp28jCH6YBO_SupKqVOKmqc9V0";
+const webhookURL = "https://discordapp.com/api/webhooks/1501244387185790986/6DLO24Eu_c-MZVNBJ7ZmcVX2RCw4SQA-3udA5UjV5gTp28jCH6YBO_SupKqVOKmqc9V0";
 
-function register(){localStorage.setItem(user.value,JSON.stringify({pass:pass.value,role:role.value}));alert("Conta criada");}
+/* LOG DISCORD */
+function logDiscord(title, desc){
+fetch(webhookURL,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+username:"ATLAS MDT LOG",
+embeds:[{
+title:title,
+description:desc,
+color:16753920,
+timestamp:new Date().toISOString()
+}]
+})
+});
+}
 
-function login(){let d=localStorage.getItem(user.value);if(!d)return alert("Usuário não existe");d=JSON.parse(d);if(d.pass!==pass.value)return alert("Senha incorreta");localStorage.setItem("logado",user.value);localStorage.setItem("role",d.role);start();}
+/* LOGIN */
+function register(){
+localStorage.setItem(user.value, JSON.stringify({
+pass: pass.value,
+role: role.value
+}));
+alert("Conta criada");
+}
 
-function start(){document.getElementById("loginBox").style.display="none";document.getElementById("app").style.display="block";if(localStorage.getItem("logado")===OWNER){document.getElementById("adminTabBtn").classList.remove("hidden");}}
+function login(){
+let data = localStorage.getItem(user.value);
 
-if(localStorage.getItem("logado"))start();
+if(!data){
+alert("Usuário não existe");
+return;
+}
 
-function logout(){localStorage.clear();location.reload();}
+data = JSON.parse(data);
 
-function tab(i){document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));document.querySelectorAll(".tab")[i].classList.add("active");document.querySelectorAll(".tabs button")[i].classList.add("active");}
+if(data.pass !== pass.value){
+alert("Senha incorreta");
+return;
+}
 
-const dbCP={
-homicidio_culposo:{t:35,m:90000},
-omissao:{t:25,m:50000},
-sequestro:{t:80,m:250000},
-dano:{t:20,m:40000},
-receptacao:{t:35,m:80000},
-dui:{t:25,m:60000},
-atropelamento:{t:40,m:100000},
-desacato:{t:15,m:30000},
-resistencia:{t:30,m:60000},
-obstrucao:{t:50,m:120000},
-porte:{t:40,m:120000},
-disparo:{t:55,m:150000},
-fraude:{t:50,m:120000},
-invasao:{t:60,m:150000},
-identidade:{t:35,m:80000},
-calunia:{t:45,m:100000},
+localStorage.setItem("logado", user.value);
+start();
 
-corrupcao:{t:60,m:200000},
-lavagem:{t:70,m:300000},
-organizacao:{t:80,m:400000},
-trafico_armas:{t:70,m:250000},
-evasao:{t:50,m:150000},
-assalto_banco:{t:90,m:500000},
-sequestro_relampago:{t:60,m:250000},
-homicidio_qualificado:{t:80,m:300000},
-cyberstalking:{t:30,m:100000},
-extorsao_qualificada:{t:70,m:250000}
+logDiscord("🔐 LOGIN",
+`Usuário: ${user.value}
+Cargo: ${data.role}`);
+}
+
+function start(){
+document.getElementById("loginBox").style.display="none";
+document.getElementById("app").style.display="block";
+}
+
+if(localStorage.getItem("logado")) start();
+
+function logout(){
+localStorage.clear();
+location.reload();
+}
+
+/* TABS */
+function tab(i){
+document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));
+
+document.querySelectorAll(".tab")[i].classList.add("active");
+document.querySelectorAll(".tabs button")[i].classList.add("active");
+}
+
+/* DB */
+const db = {
+homicidio_culposo:{t:25,m:60000},
+omissao:{t:15,m:35000},
+sequestro:{t:60,m:180000},
+dano:{t:15,m:30000},
+receptacao:{t:25,m:60000},
+dui:{t:18,m:40000},
+atropelamento:{t:30,m:80000},
+desacato:{t:10,m:20000},
+resistencia:{t:20,m:50000},
+obstrucao:{t:35,m:90000},
+porte:{t:30,m:80000},
+disparo:{t:40,m:120000},
+fraude:{t:35,m:90000},
+invasao:{t:45,m:130000},
+identidade:{t:25,m:60000},
+calunia:{t:30,m:75000},
+corrupcao:{t:40,m:120000},
+lavagem:{t:60,m:200000},
+organizacao:{t:70,m:250000},
+trafico_armas:{t:55,m:180000},
+evasao:{t:30,m:90000},
+assalto_banco:{t:80,m:300000},
+sequestro_relampago:{t:50,m:150000},
+homicidio_qualificado:{t:90,m:350000},
+cyberstalking:{t:20,m:60000},
+extorsao_qualificada:{t:60,m:220000}
 };
 
 let crimes=[];
 
-function addCrime(){crimes.push(crime.value);render();}
-function render(){list.innerHTML="";let t=0,m=0;crimes.forEach((c,i)=>{t+=dbCP[c].t;m+=dbCP[c].m;list.innerHTML+=`<div class='crime'>${c}<button onclick='remove(${i})'>X</button></div>`;});tempo.innerText=t;multa.innerText=m;}
-function remove(i){crimes.splice(i,1);render();}
-function saveBO(){localStorage.setItem("bo",bo.value);alert("BO salvo");}
-bo.value=localStorage.getItem("bo")||"";
-function sendWebhook(){fetch(webhookURL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({content:`📄 BO ${localStorage.getItem("logado")}\n${bo.value||"vazio"}`})});alert("Enviado");}
-function clearAll(){if(localStorage.getItem("logado")!==OWNER){alert("Sem permissão");return;}localStorage.clear();location.reload();}
+function addCrime(){
+crimes.push(crime.value);
+render();
+
+logDiscord("⚖️ Crime Adicionado",
+`Usuário: ${localStorage.getItem("logado")}
+Crime: ${crime.value}`);
+}
+
+function remove(i){
+
+logDiscord("❌ Crime Removido",
+`Usuário: ${localStorage.getItem("logado")}
+Crime: ${crimes[i]}`);
+
+crimes.splice(i,1);
+render();
+}
+
+function render(){
+list.innerHTML="";
+let t=0,m=0;
+
+crimes.forEach((c,i)=>{
+t+=db[c].t;
+m+=db[c].m;
+
+list.innerHTML+=`
+<div class='crime'>
+${c}
+<button onclick='remove(${i})'>X</button>
+</div>`;
+});
+
+tempo.innerText=t;
+multa.innerText=m;
+}
+
+/* BO */
+function saveBO(){
+localStorage.setItem("bo",bo.value);
+alert("BO salvo");
+
+logDiscord("📄 BO SALVO",
+`Usuário: ${localStorage.getItem("logado")}
+${bo.value}`);
+}
+
+bo.value = localStorage.getItem("bo") || "";
+
+function sendWebhook(){
+
+const userLogado = localStorage.getItem("logado");
+
+fetch(webhookURL,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+username:"ATLAS MDT",
+embeds:[{
+title:"📄 BO ENVIADO",
+fields:[
+{name:"Usuário",value:userLogado},
+{name:"BO",value:bo.value || "vazio"}
+]
+}]
+})
+});
+
+logDiscord("📤 BO ENVIADO",
+`Usuário: ${userLogado}`);
+
+alert("Enviado!");
+}
+
+/* RESET */
+function clearAll(){
+
+logDiscord("🧹 RESET",
+`Usuário: ${localStorage.getItem("logado")} resetou o sistema`);
+
+localStorage.clear();
+location.reload();
+}
 
 </script>
 
