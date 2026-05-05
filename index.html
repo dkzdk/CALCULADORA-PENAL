@@ -145,43 +145,32 @@ border-radius:6px;
 <h3>📚 Código Penal Completo</h3>
 
 <select id="crime">
-
 <option value="homicidio_culposo">Art.123 Homicídio Culposo</option>
 <option value="omissao">Art.124 Omissão de Socorro</option>
-
 <option value="sequestro">Art.159 Sequestro</option>
 <option value="dano">Art.160 Dano ao Patrimônio</option>
 <option value="receptacao">Art.161 Receptação</option>
-
 <option value="dui">Art.162 DUI</option>
 <option value="atropelamento">Art.163 Atropelamento</option>
-
 <option value="desacato">Art.164 Desacato</option>
 <option value="resistencia">Art.165 Resistência à Prisão</option>
 <option value="obstrucao">Art.166 Obstrução de Justiça</option>
-
 <option value="porte">Art.167 Porte Ilegal de Arma</option>
 <option value="disparo">Art.168 Disparo em Via Pública</option>
-
 <option value="fraude">Art.169 Fraude Bancária</option>
 <option value="invasao">Art.170 Invasão de Sistema</option>
-
 <option value="identidade">Art.171 Falsa Identidade</option>
 <option value="calunia">Art.172 Denunciação Caluniosa</option>
-
 <option value="corrupcao">Art.173 Corrupção Ativa</option>
 <option value="lavagem">Art.174 Lavagem de Dinheiro</option>
 <option value="organizacao">Art.175 Organização Criminosa</option>
 <option value="trafico_armas">Art.176 Tráfico de Armas</option>
 <option value="evasao">Art.177 Evasão de Prisão</option>
-
 <option value="assalto_banco">Art.178 Assalto a Banco</option>
 <option value="sequestro_relampago">Art.179 Sequestro Relâmpago</option>
-
 <option value="homicidio_qualificado">Art.180 Homicídio Qualificado</option>
 <option value="cyberstalking">Art.181 Cyberstalking</option>
 <option value="extorsao_qualificada">Art.182 Extorsão Qualificada</option>
-
 </select>
 
 <button onclick="addCrime()">Adicionar</button>
@@ -210,7 +199,7 @@ Multa: $<span id="multa">0</span>
 <h3>📄 BO</h3>
 <textarea id="bo" rows="10"></textarea>
 <button onclick="saveBO()">Salvar BO</button>
-<button onclick="sendWebhook()">Enviar Discord</button>
+<button onclick="sendWebhook()">Enviar Relatório Discord</button>
 </div>
 </div>
 
@@ -228,7 +217,7 @@ Multa: $<span id="multa">0</span>
 
 const webhookURL = "https://discordapp.com/api/webhooks/1501244387185790986/6DLO24Eu_c-MZVNBJ7ZmcVX2RCw4SQA-3udA5UjV5gTp28jCH6YBO_SupKqVOKmqc9V0";
 
-/* LOG DISCORD */
+/* LOG */
 function logDiscord(title, desc){
 fetch(webhookURL,{
 method:"POST",
@@ -238,7 +227,7 @@ username:"ATLAS MDT LOG",
 embeds:[{
 title:title,
 description:desc,
-color:16753920,
+color:3447003,
 timestamp:new Date().toISOString()
 }]
 })
@@ -330,6 +319,7 @@ extorsao_qualificada:{t:60,m:220000}
 
 let crimes=[];
 
+/* CRIMES */
 function addCrime(){
 crimes.push(crime.value);
 render();
@@ -378,31 +368,45 @@ logDiscord("📄 BO SALVO",
 ${bo.value}`);
 }
 
-bo.value = localStorage.getItem("bo") || "";
-
+/* RELATÓRIO CORRIGIDO */
 function sendWebhook(){
 
 const userLogado = localStorage.getItem("logado");
+
+let crimesTexto = crimes.map(c => `• ${c}`).join("\n");
+
+let relatorio = `
+📄 RELATÓRIO MDT ATLAS
+
+👮 Usuário: ${userLogado}
+
+⚖️ CRIMES:
+${crimesTexto || "Nenhum crime"}
+
+⏱️ Tempo: ${tempo.innerText} meses
+💰 Multa: $${multa.innerText}
+
+📝 BO:
+${bo.value || "Sem descrição"}
+`;
 
 fetch(webhookURL,{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
-username:"ATLAS MDT",
+username:"ATLAS MDT POLICIAL",
 embeds:[{
-title:"📄 BO ENVIADO",
-fields:[
-{name:"Usuário",value:userLogado},
-{name:"BO",value:bo.value || "vazio"}
-]
+title:"📄 RELATÓRIO GERADO",
+description:"```" + relatorio + "```",
+color:3447003
 }]
 })
 });
 
-logDiscord("📤 BO ENVIADO",
+logDiscord("📤 RELATÓRIO ENVIADO",
 `Usuário: ${userLogado}`);
 
-alert("Enviado!");
+alert("Relatório enviado!");
 }
 
 /* RESET */
@@ -414,6 +418,8 @@ logDiscord("🧹 RESET",
 localStorage.clear();
 location.reload();
 }
+
+bo.value = localStorage.getItem("bo") || "";
 
 </script>
 
